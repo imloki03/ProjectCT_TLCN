@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: ProjectCT_TLCN
+
+  # Data JPA settings
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL}
+  jackson:
+    time-zone: ${TIME_ZONE}
+
+  # Mail service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+#Server
+server:
+  address: ${SERVER_ADDRESS}
+  port: ${SERVER_PORT}
