@@ -1,5 +1,7 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hcmute.projectCT.enums.Priority;
 import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.enums.TaskType;
@@ -33,13 +35,16 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "parentTask", orphanRemoval = true)
     private List<Task> subTask;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "parent_task_id")
     private Task parentTask;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "assignee_id")
     private User assignee;
@@ -49,12 +54,15 @@ public class Task {
 
     private boolean isBacklog;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
     private List<MediaContent> mediaList;
 
+    @JsonBackReference
     @ManyToOne
     private Phase phase;
 
+    @JsonBackReference
     @ManyToOne
     private Version version;
 }

@@ -1,5 +1,8 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,11 +25,13 @@ public class User {
     private String email;
     private String password;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private UserStatus status;
 
     private String avatarURL;
 
+    @JsonIgnoreProperties("users")
     @ManyToMany
     @JoinTable(
             name = "user_tags",
@@ -35,18 +40,23 @@ public class User {
     )
     private List<Tag> tagList;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Notification> notificationList;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "owner")
     private List<Project> projectList;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Collaborator> collaboratorList;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
     private List<Message> messageList;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "assignee")
     private List<Task> task;
 }

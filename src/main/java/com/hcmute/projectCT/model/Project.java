@@ -1,5 +1,7 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +20,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
@@ -29,15 +32,19 @@ public class Project {
     private String avatarURL;
     private LocalDateTime createdDate;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Phase> phaseList;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Message> messageList;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE)
     private Media media;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Collaborator> collaboratorList;
 }

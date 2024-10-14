@@ -1,5 +1,7 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hcmute.projectCT.enums.TagType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,6 +27,7 @@ public class Tag {
 
     private String description;
 
+    @JsonIgnoreProperties("tagList")
     @ManyToMany(mappedBy = "tagList")
     private List<User> users;
 }
