@@ -1,5 +1,6 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class Version {
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "version")
+    @JsonManagedReference
     private List<Task> taskList;
 }

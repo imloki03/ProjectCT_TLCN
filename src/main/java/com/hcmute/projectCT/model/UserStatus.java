@@ -1,5 +1,7 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +23,6 @@ public class UserStatus {
     private boolean isNew;
 
     @OneToOne
+    @JsonBackReference
     private User user;
 }
