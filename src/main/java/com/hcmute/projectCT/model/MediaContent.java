@@ -1,5 +1,6 @@
 package com.hcmute.projectCT.model;
 
+import com.hcmute.projectCT.enums.MediaType;
 import jakarta.persistence.*;
 import lombok.*;
 

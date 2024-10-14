@@ -1,6 +1,8 @@
 package com.hcmute.projectCT.model;
 
-import jakarta.persistence.Version;
+import com.hcmute.projectCT.enums.Priority;
+import com.hcmute.projectCT.enums.Status;
+import com.hcmute.projectCT.enums.TaskType;
 import jakarta.persistence.*;
 import lombok.*;
 

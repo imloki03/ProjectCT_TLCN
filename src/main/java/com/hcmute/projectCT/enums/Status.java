@@ -1,4 +1,4 @@
-package com.hcmute.projectCT.model;
+package com.hcmute.projectCT.enums;
 
 public enum Status {
     TODO,
