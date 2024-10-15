@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final MessageUtil messageUtil;
-    private final EmailService emailService;
 
     @PostMapping("")
     public ResponseEntity<?> registerAccount(@RequestBody RegisterRequest registerRequest) {
