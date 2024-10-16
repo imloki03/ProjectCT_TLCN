@@ -1,12 +1,10 @@
 package com.hcmute.projectCT.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hcmute.projectCT.enums.Permission;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -16,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Collaborator {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
