@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
-    private String username;
+public class EditProfileRequest {
     private String name;
-    private String password;
-    private String email;
     private String gender;
+    private String avatarURL;
+    private List<UUID> tagList;
 }

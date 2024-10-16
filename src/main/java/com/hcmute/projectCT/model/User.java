@@ -24,6 +24,7 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String gender;
 
     @JsonManagedReference
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
