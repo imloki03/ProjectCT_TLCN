@@ -1,6 +1,8 @@
 package com.hcmute.projectCT.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +23,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("messageList")
     private User sender;
 
     private String content;
@@ -30,10 +32,10 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("messageList")
     private Project project;
 
     @OneToOne(mappedBy = "message", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @JsonIgnoreProperties("message")
     private MediaContent media;
 }

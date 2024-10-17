@@ -1,6 +1,7 @@
 package com.hcmute.projectCT.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hcmute.projectCT.enums.MediaType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,19 +31,18 @@ public class MediaContent {
 
     @OneToOne
     @JoinColumn(name = "previous_version_id")
-    @JsonBackReference
     private MediaContent previousVersion;
 
     @ManyToOne
     @JoinColumn(name = "media_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("mediaList")
     private Media media;
 
     @OneToOne
-    @JsonBackReference
+    @JsonIgnoreProperties("media")
     private Message message;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnoreProperties("mediaList")
     private Task task;
 }
