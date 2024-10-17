@@ -1,5 +1,6 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hcmute.projectCT.enums.Status;
@@ -31,13 +32,13 @@ public class Phase {
     private Status status;
 
     @OneToMany(mappedBy = "phase")
-    @JsonManagedReference
+    @JsonIgnoreProperties("phase")
     private List<Task> taskList;
 
     private LocalDateTime createdDate;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("phaseList")
     private Project project;
 }

@@ -1,6 +1,7 @@
 package com.hcmute.projectCT.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,11 +19,11 @@ public class Media {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
+    @JsonIgnoreProperties("media")
     @OneToOne
     private Project project;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties("media")
     @OneToMany(mappedBy = "media")
     private List<MediaContent> mediaList;
 }

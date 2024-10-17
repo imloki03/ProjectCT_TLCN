@@ -26,7 +26,7 @@ public class User {
     private String password;
     private String gender;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties("user")
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private UserStatus status;
 
@@ -41,23 +41,23 @@ public class User {
     )
     private List<Tag> tagList;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Notification> notificationList;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties("owner")
     @OneToMany(mappedBy = "owner")
     private List<Project> projectList;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Collaborator> collaboratorList;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties("sender")
     @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
     private List<Message> messageList;
 
-    @JsonBackReference
+    @JsonIgnoreProperties("assignee")
     @OneToMany(mappedBy = "assignee")
-    private List<Task> task;
+    private List<Task> taskList;
 }

@@ -1,5 +1,6 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -22,6 +23,6 @@ public class UserStatus {
     private boolean isNew;
 
     @OneToOne
-    @JsonBackReference
+    @JsonIgnoreProperties("status")
     private User user;
 }

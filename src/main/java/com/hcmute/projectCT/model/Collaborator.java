@@ -1,6 +1,7 @@
 package com.hcmute.projectCT.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hcmute.projectCT.enums.Permission;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,12 +20,12 @@ public class Collaborator {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("collaboratorList")
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("collaboratorList")
     private Project project;
 
     @Enumerated(EnumType.STRING)
