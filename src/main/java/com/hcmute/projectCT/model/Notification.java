@@ -1,12 +1,10 @@
 package com.hcmute.projectCT.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-
 
 @Entity
 @Getter
@@ -23,10 +21,9 @@ public class Notification {
     private String content;
     private LocalDateTime time;
     private String reference;
-    private boolean isReaded;
+    private boolean isRead;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties("notificationList")
     private User user;
 }

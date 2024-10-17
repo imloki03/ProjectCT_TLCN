@@ -1,8 +1,6 @@
 package com.hcmute.projectCT.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.hcmute.projectCT.enums.Priority;
 import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.enums.TaskType;
@@ -11,7 +9,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Entity
 @Getter
@@ -36,16 +33,13 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
-    @JsonIgnoreProperties("parentTask")
     @OneToMany(mappedBy = "parentTask", orphanRemoval = true)
     private List<Task> subTask;
 
-    @JsonIgnoreProperties("subTask")
     @ManyToOne
     @JoinColumn(name = "parent_task_id")
     private Task parentTask;
 
-    @JsonIgnoreProperties("taskList")
     @ManyToOne
     @JoinColumn(name = "assignee_id")
     private User assignee;
@@ -55,15 +49,12 @@ public class Task {
 
     private boolean isBacklog;
 
-    @JsonIgnoreProperties("task")
     @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
     private List<MediaContent> mediaList;
 
-    @JsonIgnoreProperties("taskList")
     @ManyToOne
     private Phase phase;
 
-    @JsonIgnoreProperties("taskList")
     @ManyToOne
     private Version version;
 }
