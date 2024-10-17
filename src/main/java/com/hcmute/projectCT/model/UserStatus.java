@@ -1,11 +1,10 @@
 package com.hcmute.projectCT.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
-
 
 @Entity
 @Getter
@@ -23,6 +22,5 @@ public class UserStatus {
     private boolean isNew;
 
     @OneToOne
-    @JsonIgnoreProperties("status")
     private User user;
 }

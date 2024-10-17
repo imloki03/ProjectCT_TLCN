@@ -1,7 +1,6 @@
 package com.hcmute.projectCT.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import com.hcmute.projectCT.enums.MediaType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,14 +34,13 @@ public class MediaContent {
 
     @ManyToOne
     @JoinColumn(name = "media_id")
-    @JsonIgnoreProperties("mediaList")
     private Media media;
 
     @OneToOne
-    @JsonIgnoreProperties("media")
+    @JoinColumn(name = "message_id")
     private Message message;
 
     @ManyToOne
-    @JsonIgnoreProperties("mediaList")
+    @JoinColumn(name = "task_id")
     private Task task;
 }
