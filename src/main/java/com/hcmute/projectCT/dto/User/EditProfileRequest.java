@@ -16,5 +16,5 @@ public class EditProfileRequest {
     private String name;
     private String gender;
     private String avatarURL;
-    private List<UUID> tagList;
+    private List<Long> tagList;
 }
