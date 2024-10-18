@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -57,4 +58,12 @@ public class Task {
 
     @ManyToOne
     private Version version;
+
+    public List<Long> getSubtaskIdList(){
+        List<Long> subtaskId = new ArrayList<>();
+        for (Task task : subTask) {
+            subtaskId.add(task.getId());
+        }
+        return subtaskId;
+    }
 }
