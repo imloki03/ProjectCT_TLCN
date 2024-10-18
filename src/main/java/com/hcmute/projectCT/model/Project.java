@@ -25,7 +25,6 @@ public class Project {
     private String name;
     private String description;
     private String urlName;
-    private String gender;
     private String avatarURL;
     private LocalDateTime createdDate;
 

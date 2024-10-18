@@ -7,7 +7,6 @@ import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.exception.RegistrationException;
 import com.hcmute.projectCT.model.User;
 import com.hcmute.projectCT.model.UserStatus;
-import com.hcmute.projectCT.repository.MessageRepository;
 import com.hcmute.projectCT.repository.TagRepository;
 import com.hcmute.projectCT.repository.UserRepository;
 import com.hcmute.projectCT.repository.UserStatusRepository;
