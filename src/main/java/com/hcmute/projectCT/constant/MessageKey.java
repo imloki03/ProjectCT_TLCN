@@ -3,6 +3,10 @@ package com.hcmute.projectCT.constant;
 public class MessageKey {
     public static final String LOGIN_SUCCESS = "auth.login.success";
     public static final String LOGIN_FAILED = "auth.login.failed";
+    public static final String TASK_CREATE_SUCCESS = "backlog.create.success";
+    public static final String TASK_UPDATE_SUCCESS = "backlog.update.success";
+    public static final String TASK_MOVE_TO_PHASE_SUCCESS = "backlog.move.success";
+    public static final String TASK_DELETE_SUCCESS = "backlog.delete.success";
     public static final String PROJECT_IMAGE_UPDATE_SUCCESS = "project.update.image.success";
     public static final String PROJECT_INFO_UPDATE_SUCCESS = "project.update.info.success";
     public static final String PROJECT_DELETE_SUCCESS = "project.delete.success";

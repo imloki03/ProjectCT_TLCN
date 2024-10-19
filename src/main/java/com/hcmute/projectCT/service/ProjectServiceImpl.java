@@ -2,6 +2,7 @@ package com.hcmute.projectCT.service;
 
 import com.hcmute.projectCT.dto.Project.ProjectResponse;
 import com.hcmute.projectCT.dto.Project.UpdateProjectRequest;
+import com.hcmute.projectCT.model.Backlog;
 import com.hcmute.projectCT.model.Project;
 import com.hcmute.projectCT.model.User;
 import com.hcmute.projectCT.repository.ProjectRepository;
@@ -34,6 +35,7 @@ public class ProjectServiceImpl implements ProjectService{
                 .description(projectDescription)
                 .urlName(projectName.toLowerCase()+shortString)
                 .createdDate(LocalDateTime.now())
+                .backlog(new Backlog())
                 .build();
         projectRepository.save(project);
     }

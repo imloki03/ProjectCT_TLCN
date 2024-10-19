@@ -19,12 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping("api/v1/project")
 @RequiredArgsConstructor
 @Tag(name = "Project Controller")
+
 public class ProjectController {
     final ProjectService projectService;
     final MessageUtil messageUtil;
