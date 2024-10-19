@@ -48,10 +48,11 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private boolean isBacklog;
-
     @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
     private List<MediaContent> mediaList;
+
+    @ManyToOne
+    private Backlog backlog;
 
     @ManyToOne
     private Phase phase;
