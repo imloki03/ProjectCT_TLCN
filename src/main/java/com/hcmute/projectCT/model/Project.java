@@ -28,6 +28,9 @@ public class Project {
     private String avatarURL;
     private LocalDateTime createdDate;
 
+    @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE)
+    private Backlog backlog;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Phase> phaseList;
 
