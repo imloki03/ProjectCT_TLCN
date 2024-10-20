@@ -28,4 +28,7 @@ public class Version {
 
     @OneToMany(mappedBy = "version")
     private List<Task> taskList;
+
+    @ManyToOne
+    private Project project;
 }

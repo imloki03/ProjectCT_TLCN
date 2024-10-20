@@ -42,4 +42,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Collaborator> collaboratorList;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    private List<Version> versionList;
 }
