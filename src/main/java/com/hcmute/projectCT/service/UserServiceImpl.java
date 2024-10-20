@@ -1,8 +1,7 @@
 package com.hcmute.projectCT.service;
 
 import com.hcmute.projectCT.constant.MessageKey;
-import com.hcmute.projectCT.dto.User.EditProfileRequest;
-import com.hcmute.projectCT.dto.User.RegisterRequest;
+import com.hcmute.projectCT.dto.User.*;
 import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.exception.RegistrationException;
 import com.hcmute.projectCT.model.User;
@@ -58,9 +57,74 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editProfile(EditProfileRequest request, String username) {
         User existingUser = userRepository.findByUsername(username);
-        User updatedUser = toUserEntity(request, existingUser);
-        userRepository.save(updatedUser);
+        if (existingUser == null) {
+            throw new InternalServerException(HttpStatus.BAD_REQUEST.value(), MessageKey.USER_NOT_FOUND);
+        }
+
+        try {
+            User updatedUser = toUserEntity(request, existingUser);
+            userRepository.save(updatedUser);
+        }
+        catch (Exception e) {
+            log.error("Error occurred during edit user profile", e);
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
     }
+
+    @Override
+    public void editProfileAvatar(EditUserAvatarRequest request, String username) {
+        User existingUser = userRepository.findByUsername(username);
+        if (existingUser == null) {
+            throw new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.USER_NOT_FOUND);
+        }
+
+        try {
+            existingUser.setAvatarURL(request.getAvatarURL());
+            userRepository.save(existingUser);
+        }
+        catch (Exception e) {
+            log.error("Error occurred during edit user profile", e);
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public UserResponse getUserInfo(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RegistrationException(HttpStatus.NOT_FOUND.value(), MessageKey.USER_NOT_FOUND);
+        }
+
+        try {
+            return toResponse(user);
+        } catch (Exception e) {
+            log.error("Error occurred while fetching user info for username: {}", username, e);
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
+    }
+
+    private UserResponse toResponse(User user) {
+        return UserResponse.builder()
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .gender(user.getGender())
+                .avatarURL(user.getAvatarURL())
+                .status(UserStatusResponse.builder()
+                        .isActivated(user.getStatus().isActivated())
+                        .isNew(user.getStatus().isNew())
+                        .build())
+                .tagList(user.getTagList().stream()
+                        .map(tag -> TagResponse.builder()
+                                .name(tag.getName())
+                                .type(tag.getType().name())
+                                .description(tag.getDescription())
+                                .build())
+                        .toList())
+                .build();
+    }
+
 
     private User toUserEntity(RegisterRequest request) {
         return User.builder()
@@ -75,9 +139,9 @@ public class UserServiceImpl implements UserService {
     private User toUserEntity(EditProfileRequest request, User existingUser) {
         return existingUser.toBuilder()
                 .name(request.getName())
-                .avatarURL(request.getAvatarURL())
                 .gender(request.getGender())
                 .tagList(tagRepository.findAllById(request.getTagList()))
                 .build();
     }
+
 }
