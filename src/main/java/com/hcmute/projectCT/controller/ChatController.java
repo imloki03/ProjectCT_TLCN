@@ -10,6 +10,7 @@ import com.hcmute.projectCT.model.Message;
 import com.hcmute.projectCT.service.ChatService;
 import com.hcmute.projectCT.util.MessageUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -92,7 +93,8 @@ public class ChatController {
                     @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
             })
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<?> getMessagesByProject(@PathVariable Long projectId) {
+    public ResponseEntity<?> getMessagesByProject(@Parameter(description = "The id of the project that messages going to be fetched")
+                                                    @PathVariable Long projectId) {
         try {
             List<MessageResponse> messages = chatService.getMessagesByProject(projectId);
             var respondData = RespondData.builder()
@@ -118,7 +120,8 @@ public class ChatController {
                     @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
             })
     @GetMapping("/search")
-    public ResponseEntity<?> searchMessages(@RequestParam String keyword) {
+    public ResponseEntity<?> searchMessages(@Parameter(description = "The keyword to search for")
+                                            @RequestParam String keyword) {
         try {
             List<MessageResponse> messages = chatService.searchMessages(keyword);
             var respondData = RespondData.builder()

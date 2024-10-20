@@ -32,7 +32,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Message sendMessage(MessageRequest request) {
         try {
-            Message message = toEntity(request);  // Use the toEntity method here
+            Message message = toEntity(request);
             messageRepository.save(message);
             return message;
         } catch (Exception e) {
@@ -43,13 +43,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void pinMessage(Long id) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.MESSAGE_NOT_FOUND));
+
         try {
-            Message message = messageRepository.findById(id).orElse(null);
-
-            if (message == null) {
-                throw new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.MESSAGE_NOT_FOUND);
-            }
-
             message.setPinned(true);
             messageRepository.save(message);
         } catch (Exception e) {
@@ -60,21 +57,16 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<MessageResponse> getMessagesByProject(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.PROJECT_NOT_FOUND));
+
         try {
-            Optional<Project> projectOpt = projectRepository.findById(projectId);
-
-            if (projectOpt.isEmpty()) {
-                throw new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.PROJECT_NOT_FOUND);
-            }
-
-            Project project = projectOpt.get();
             List<Message> messages = messageRepository.findByProject(project);
-
             return messages.stream()
                     .map(this::toResponse)
                     .toList();
         } catch (Exception e) {
-            log.error("Error occurred while fetching messages", e);
+            log.error("Error occurred while fetching messages for project ID: {}", projectId, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
         }
     }
@@ -87,12 +79,12 @@ public class ChatServiceImpl implements ChatService {
                     .map(this::toResponse)
                     .toList();
         } catch (Exception e) {
-            log.error("Error occurred while searching messages", e);
+            log.error("Error occurred while searching messages with keyword: {}", keyword, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
         }
     }
 
-
+    @Override
     public MessageResponse toResponse(Message message) {
         return MessageResponse.builder()
                 .sender(message.getSender().getUsername())
@@ -103,6 +95,7 @@ public class ChatServiceImpl implements ChatService {
                 .build();
     }
 
+    @Override
     public Message toEntity(MessageRequest request) {
         User sender = userRepository.findByUsername(request.getSender());
         Optional<Project> projectOpt = projectRepository.findById(request.getProject());

@@ -15,13 +15,19 @@ public class MessageKey {
     public static final String EMAIL_ALREADY_EXISTS = "user.reg.email.exist";
     public static final String USERNAME_ALREADY_EXISTS = "user.reg.username.exist";
     public static final String EDIT_PROFILE_SUCCESS = "user.edit.success";
-    public static final String MESSAGE_SENT_ERROR = "message.send.error" ;
-    public static final String MESSAGE_SENT_SUCCESS = "message.send.success" ;
-    public static final String MESSAGE_PIN_ERROR = "message.pin.error" ;
-    public static final String MESSAGE_PINNED_SUCCESS = "message.pin.success" ;
-    public static final String MESSAGES_RETRIEVED_SUCCESS = "message.retrieve.success" ;
+    public static final String MESSAGE_SENT_ERROR = "message.send.error";
+    public static final String MESSAGE_SENT_SUCCESS = "message.send.success";
+    public static final String MESSAGE_PIN_ERROR = "message.pin.error";
+    public static final String MESSAGE_PINNED_SUCCESS = "message.pin.success";
+    public static final String MESSAGES_RETRIEVED_SUCCESS = "message.retrieve.success";
     public static final String SERVER_ERROR = "server.error";
-    public static final String USER_NOT_FOUND = "user.notfound" ;
-    public static final String PROJECT_NOT_FOUND = "project.notfound" ;
-    public static final String MESSAGE_NOT_FOUND = "message.notfound" ;
+    public static final String USER_NOT_FOUND = "user.notfound";
+    public static final String PROJECT_NOT_FOUND = "project.notfound";
+    public static final String MESSAGE_NOT_FOUND = "message.notfound";
+    public static final String MEDIA_NOT_FOUND = "media.notfound";
+    public static final String MEDIA_ADDED_SUCCESS = "media.added.success";
+    public static final String MEDIA_EDITED_SUCCESS = "media.edited.success";
+    public static final String MEDIA_DELETED_SUCCESS = "media.deleted.success";
+    public static final String MEDIA_VERSION_UPDATED_SUCCESS = "media.version.updated.success";
+    public static final String MEDIA_FETCH_SUCCESS = "media.fetch.success";
 }
