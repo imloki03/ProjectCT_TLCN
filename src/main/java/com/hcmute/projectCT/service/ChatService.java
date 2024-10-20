@@ -11,4 +11,6 @@ public interface ChatService {
     public void pinMessage(Long id);
     public List<MessageResponse> getMessagesByProject(Long projectId);
     public List<MessageResponse> searchMessages(String keyword);
+    public MessageResponse toResponse(Message message);
+    public Message toEntity(MessageRequest request);
 }
