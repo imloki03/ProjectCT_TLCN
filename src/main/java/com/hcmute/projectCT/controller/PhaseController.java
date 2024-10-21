@@ -8,6 +8,8 @@ import com.hcmute.projectCT.dto.RespondData;
 import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.service.PhaseService;
 import com.hcmute.projectCT.util.MessageUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +23,19 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/phase")
 @RequiredArgsConstructor
-@Tag(name = "Project Controller")
+@Tag(name = "Phase Controller")
 public class PhaseController {
     final PhaseService phaseService;
     final MessageUtil messageUtil;
 
+    @Operation(
+            summary = "Create new phase",
+            description = "This API will create new phase for a project.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Phase created successfully"),
+            })
     @PostMapping("{projectId}")
     public ResponseEntity<?> createNewPhase(@PathVariable Long projectId, @RequestBody PhaseRequest phaseRequest){
         phaseService.createNewPhase(projectId, phaseRequest);
@@ -37,6 +47,14 @@ public class PhaseController {
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get phase",
+            description = "This API will get a phase information by its ID.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Get phase successfully"),
+            })
     @GetMapping("{projectId}/{phaseId}")
     public ResponseEntity<?> getPhase(@PathVariable Long projectId, @PathVariable Long phaseId) {
         PhaseResponse phaseResponse = phaseService.getPhase(phaseId);
@@ -49,6 +67,14 @@ public class PhaseController {
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get all phases",
+            description = "This API will get all phases information of a project.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Get all phases successfully"),
+            })
     @GetMapping("{projectId}")
     public ResponseEntity<?> getAllPhase(@PathVariable Long projectId){
         List<PhaseResponse> phaseResponses = phaseService.getAllPhase(projectId);
@@ -61,6 +87,14 @@ public class PhaseController {
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Update phase information",
+            description = "This API will update phase information for a project.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Update phase successfully"),
+            })
     @PutMapping("{projectId}/{phaseId}")
     public ResponseEntity<?> updatePhase(@PathVariable Long projectId, @PathVariable Long phaseId, @RequestBody UpdatePhaseRequest updatePhaseRequest) {
         phaseService.updatePhase(phaseId, updatePhaseRequest);
@@ -72,6 +106,14 @@ public class PhaseController {
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete phase",
+            description = "This API will delete a phase.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Delete phase successfully"),
+            })
     @DeleteMapping("{projectId}/{phaseId}")
     public ResponseEntity<?> deletePhase(@PathVariable Long projectId, @PathVariable Long phaseId) {
         phaseService.deletePhase(phaseId);
@@ -83,6 +125,14 @@ public class PhaseController {
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Assign task",
+            description = "This API will assign a task to a collaborator.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Assign task successfully"),
+            })
     @PatchMapping("{projectId}/{phaseId}/assign/{assigneeUsername}")
     public ResponseEntity<?> assignTask(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable String assigneeUsername) {
         phaseService.assignTask(phaseId, assigneeUsername);
@@ -94,6 +144,14 @@ public class PhaseController {
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Update task status",
+            description = "This API will update a task's status.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Update status successfully"),
+            })
     @PatchMapping("{projectId}/{phaseId}/status/{status}")
     public ResponseEntity<?> updateStatus(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable Status status) {
         phaseService.updateTaskStatus(phaseId, status);
@@ -105,6 +163,14 @@ public class PhaseController {
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Move task to backlog",
+            description = "This API will move task to backlog.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Move task to backlog successfully"),
+            })
     @PatchMapping("{projectId}/{phaseId}/backlog/{taskId}")
     public ResponseEntity<?> moveTaskToBacklog(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable Long taskId) {
         phaseService.moveTaskToBacklog(taskId);

@@ -79,7 +79,7 @@ public class ProjectController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Get project successfully"),
+                            description = "Get all projects successfully"),
             })
     @GetMapping("{owner}")
     public ResponseEntity<?> getAllProject(@Parameter(description = "Owner username")
@@ -100,7 +100,7 @@ public class ProjectController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Get project successfully"),
+                            description = "Update project successfully"),
             })
     @PatchMapping("{id}")
     public ResponseEntity<?> updateProjectAvatar(@Parameter(description = "Project ID")
@@ -121,7 +121,7 @@ public class ProjectController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Get project successfully"),
+                            description = "Update project successfully"),
             })
     @PutMapping("{id}")
     public ResponseEntity<?> updateProjectInformation(@Parameter(description = "Project ID")
@@ -142,7 +142,7 @@ public class ProjectController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Get project successfully"),
+                            description = "Delete project successfully"),
             })
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteProject(@Parameter(description = "Project ID")
