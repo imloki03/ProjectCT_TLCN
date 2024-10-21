@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/phase")
 @RequiredArgsConstructor
-@Tag(name = "Project Controller")
+@Tag(name = "Phase Controller")
 public class PhaseController {
     final PhaseService phaseService;
     final MessageUtil messageUtil;
