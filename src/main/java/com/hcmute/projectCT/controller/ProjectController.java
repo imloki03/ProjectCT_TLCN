@@ -24,7 +24,6 @@ import java.util.List;
 @RequestMapping("api/v1/project")
 @RequiredArgsConstructor
 @Tag(name = "Project Controller")
-
 public class ProjectController {
     final ProjectService projectService;
     final MessageUtil messageUtil;

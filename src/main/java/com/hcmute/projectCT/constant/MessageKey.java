@@ -17,6 +17,10 @@ public class MessageKey {
     public static final String MESSAGE_SENT_ERROR = "message.send.error";
     public static final String MESSAGE_SENT_SUCCESS = "message.send.success";
     public static final String MESSAGES_RETRIEVED_SUCCESS = "message.retrieve.success";
+    public static final String PHASE_CREATE_SUCCESS = "phase.create.success";
+    public static final String PHASE_UPDATE_SUCCESS = "phase.update.success";
+    public static final String PHASE_DELETE_SUCCESS = "phase.delete.success";
+    public static final String PHASE_MOVE_SUCCESS = "phase.move.success";
     public static final String PROJECT_DELETE_SUCCESS = "project.delete.success";
     public static final String PROJECT_IMAGE_UPDATE_SUCCESS = "project.update.image.success";
     public static final String PROJECT_INFO_UPDATE_SUCCESS = "project.update.info.success";
