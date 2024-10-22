@@ -33,7 +33,7 @@ public class UpdateTaskRequest {
         this.startTime = task.getStartTime();
         this.endTime = task.getEndTime();
         this.priority = task.getPriority();
-        this.assigneeUsername = task.getAssignee().getUsername();
+        this.assigneeUsername = task.getAssignee().getUser().getUsername();
         this.status = task.getStatus();
     }
 }
