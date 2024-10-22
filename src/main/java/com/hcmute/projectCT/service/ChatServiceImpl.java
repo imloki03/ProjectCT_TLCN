@@ -4,9 +4,11 @@ import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.Message.MessageRequest;
 import com.hcmute.projectCT.dto.Message.MessageResponse;
 import com.hcmute.projectCT.exception.InternalServerException;
+import com.hcmute.projectCT.model.Collaborator;
 import com.hcmute.projectCT.model.Message;
 import com.hcmute.projectCT.model.Project;
 import com.hcmute.projectCT.model.User;
+import com.hcmute.projectCT.repository.CollaboratorRepository;
 import com.hcmute.projectCT.repository.MessageRepository;
 import com.hcmute.projectCT.repository.ProjectRepository;
 import com.hcmute.projectCT.repository.UserRepository;
@@ -28,6 +30,7 @@ public class ChatServiceImpl implements ChatService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final CollaboratorRepository collaboratorRepository;
 
     @Override
     public Message sendMessage(MessageRequest request) {
@@ -87,7 +90,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public MessageResponse toResponse(Message message) {
         return MessageResponse.builder()
-                .sender(message.getSender().getUsername())
+                .sender(message.getSender().getUser().getUsername())
                 .content(message.getContent())
                 .project(message.getProject().getName())
                 .sentTime(message.getSentTime())
@@ -105,11 +108,16 @@ public class ChatServiceImpl implements ChatService {
         if (projectOpt.isEmpty()) {
             throw new InternalServerException(HttpStatus.BAD_REQUEST.value(), MessageKey.PROJECT_NOT_FOUND);
         }
-        Project project = projectOpt.get();
+
+        Optional<Collaborator> collaboratorOpt = collaboratorRepository.findByProjectAndUser(projectOpt.get(), sender);
+        if (collaboratorOpt.isEmpty()) {
+            throw new InternalServerException(HttpStatus.BAD_REQUEST.value(), MessageKey.USER_NOT_FOUND);
+        }
+
         return Message.builder()
                 .content(request.getContent())
-                .sender(sender)
-                .project(project)
+                .sender(collaboratorOpt.get())
+                .project(projectOpt.get())
                 .sentTime(LocalDateTime.now())
                 .build();
     }

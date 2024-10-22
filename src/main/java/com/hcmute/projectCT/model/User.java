@@ -44,10 +44,4 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Collaborator> collaboratorList;
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
-    private List<Message> messageList;
-
-    @OneToMany(mappedBy = "assignee")
-    private List<Task> taskList;
 }
