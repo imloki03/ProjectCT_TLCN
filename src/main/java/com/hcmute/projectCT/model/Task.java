@@ -43,7 +43,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "assignee_id")
-    private User assignee;
+    private Collaborator assignee;
 
     @Enumerated(EnumType.STRING)
     private Status status;

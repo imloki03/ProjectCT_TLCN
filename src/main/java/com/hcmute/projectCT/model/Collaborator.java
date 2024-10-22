@@ -5,6 +5,8 @@ import com.hcmute.projectCT.enums.Permission;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -26,4 +28,10 @@ public class Collaborator {
 
     @Enumerated(EnumType.STRING)
     private Permission permission;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
+    private List<Message> messageList;
+
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> taskList;
 }

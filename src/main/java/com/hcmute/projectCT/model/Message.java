@@ -19,7 +19,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
-    private User sender;
+    private Collaborator sender;
 
     private String content;
     private LocalDateTime sentTime;
