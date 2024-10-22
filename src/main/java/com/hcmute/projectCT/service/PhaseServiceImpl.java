@@ -8,10 +8,7 @@ import com.hcmute.projectCT.dto.Project.UpdateProjectRequest;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.model.*;
-import com.hcmute.projectCT.repository.PhaseRepository;
-import com.hcmute.projectCT.repository.ProjectRepository;
-import com.hcmute.projectCT.repository.TaskRepository;
-import com.hcmute.projectCT.repository.UserRepository;
+import com.hcmute.projectCT.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +23,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PhaseServiceImpl implements PhaseService{
+    final CollaboratorRepository collaboratorRepository;
     final PhaseRepository phaseRepository;
     final ProjectRepository projectRepository;
     final TaskRepository taskRepository;
-    final UserRepository userRepository;
 
     @Override
     public void createNewPhase(Long projectId, PhaseRequest phaseRequest) {
@@ -91,8 +88,8 @@ public class PhaseServiceImpl implements PhaseService{
     @Override
     public void assignTask(Long taskId, String assigneeUsername) {
         Task task = taskRepository.findById(taskId).orElse(null);
-        User user = userRepository.findByUsername(assigneeUsername);
-        task.setAssignee(user);
+        Collaborator collaborator = collaboratorRepository.findByUser_Username(assigneeUsername);
+        task.setAssignee(collaborator);
         taskRepository.save(task);
     }
 
