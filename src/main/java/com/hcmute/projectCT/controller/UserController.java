@@ -2,10 +2,7 @@ package com.hcmute.projectCT.controller;
 
 import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.RespondData;
-import com.hcmute.projectCT.dto.User.EditProfileRequest;
-import com.hcmute.projectCT.dto.User.EditUserAvatarRequest;
-import com.hcmute.projectCT.dto.User.RegisterRequest;
-import com.hcmute.projectCT.dto.User.UserResponse;
+import com.hcmute.projectCT.dto.User.*;
 import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.exception.RegistrationException;
 import com.hcmute.projectCT.service.UserService;
@@ -53,7 +50,7 @@ public class UserController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         } catch (InternalServerException e) {
             var respondData = RespondData.builder()
                     .status(e.getErrorCode())
@@ -84,7 +81,15 @@ public class UserController {
                     .build();
 
             return new ResponseEntity<>(respondData, HttpStatus.OK);
-        } catch (InternalServerException e) {
+        }
+        catch (RegistrationException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (InternalServerException e) {
             var respondData = RespondData.builder()
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
@@ -112,9 +117,54 @@ public class UserController {
                     .status(HttpStatus.OK.value())
                     .desc(messageUtil.getMessage(MessageKey.EDIT_PROFILE_SUCCESS))
                     .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (RegistrationException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (InternalServerException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+    }
+
+    @Operation(
+            summary = "Change User Passwrd",
+            description = "This API allows a user to change password when the forgoted.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Change password successfully."),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+            }
+    )
+    @PatchMapping("/{username}")
+    public ResponseEntity<?> changePassword(
+            @RequestBody ChangePasswordRequest request,
+            @Parameter(description = "The username of the user to be edited.")
+            @PathVariable String username) {
+        try {
+            userService.changePassword(request, username);
+            var respondData = RespondData.builder()
+                    .status(HttpStatus.OK.value())
+                    .desc(messageUtil.getMessage(MessageKey.CHANGE_PASSWORD_SUCCESS))
+                    .build();
 
             return new ResponseEntity<>(respondData, HttpStatus.OK);
-        } catch (InternalServerException e) {
+        }
+        catch (RegistrationException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (InternalServerException e) {
             var respondData = RespondData.builder()
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
@@ -144,7 +194,15 @@ public class UserController {
                     .build();
 
             return new ResponseEntity<>(respondData, HttpStatus.OK);
-        } catch (InternalServerException e) {
+        }
+        catch (RegistrationException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (InternalServerException e) {
             var respondData = RespondData.builder()
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
