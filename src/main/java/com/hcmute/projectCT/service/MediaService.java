@@ -16,6 +16,5 @@ public interface MediaService {
     public List<MediaResponse> getMediaByProject(Long projectId);
     public MediaContent toEntity(MediaRequest mediaRequest);
     public MediaContent toEntity(MediaContent existingMedia, MediaRequest mediaRequest);
-    public MediaResponse toResponse(MediaContent mediaContent);
     public MediaType convertFilenameToMediaType(String filename);
 }

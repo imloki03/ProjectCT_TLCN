@@ -22,5 +22,4 @@ public interface VersionService {
 
     Version toEntity(Version existingVersion, VersionRequest versionRequest);
 
-    VersionResponse toResponse(Version version);
 }

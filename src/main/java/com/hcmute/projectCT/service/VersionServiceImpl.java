@@ -84,7 +84,7 @@ public class VersionServiceImpl implements VersionService {
                 .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.VERSION_NOT_FOUND));
 
         try {
-            return toResponse(version);
+            return new VersionResponse(version);
         } catch (Exception e) {
             log.error("Error occurred while fetching version info for ID: {}", id, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
@@ -98,7 +98,7 @@ public class VersionServiceImpl implements VersionService {
 
         try {
             List<Version> versions = versionRepository.findByProject(project);
-            return versions.stream().map(this::toResponse).collect(Collectors.toList());
+            return versions.stream().map(VersionResponse::new).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error occurred while fetching versions for project ID: {}", projectId, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
@@ -133,21 +133,6 @@ public class VersionServiceImpl implements VersionService {
                 .name(Optional.ofNullable(versionRequest.getName()).orElse(existingVersion.getName()))
                 .description(Optional.ofNullable(versionRequest.getDescription()).orElse(existingVersion.getDescription()))
                 .taskList(updatedTaskList)
-                .build();
-    }
-
-    @Override
-    public VersionResponse toResponse(Version version) {
-        return VersionResponse.builder()
-                .name(version.getName())
-                .description(version.getDescription())
-                .createdDate(version.getCreatedDate())
-                .taskList(Optional.ofNullable(version.getTaskList())
-                        .map(tasks -> tasks.stream()
-                                .map(Task::getId)
-                                .map(String::valueOf)
-                                .collect(Collectors.toList()))
-                        .orElse(null))
                 .build();
     }
 }
