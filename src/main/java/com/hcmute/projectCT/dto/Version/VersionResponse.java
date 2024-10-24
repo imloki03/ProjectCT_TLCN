@@ -1,6 +1,7 @@
 package com.hcmute.projectCT.dto.Version;
 
 import com.hcmute.projectCT.model.Task;
+import com.hcmute.projectCT.model.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -18,4 +21,16 @@ public class VersionResponse {
     private String description;
     private LocalDateTime createdDate;
     private List<String> taskList;
+
+    public VersionResponse(Version version) {
+        this.name = version.getName();
+        this.description = version.getDescription();
+        this.createdDate = version.getCreatedDate();
+        this.taskList = Optional.ofNullable(version.getTaskList())
+                .map(tasks -> tasks.stream()
+                        .map(Task::getId)
+                        .map(String::valueOf)
+                        .collect(Collectors.toList()))
+                .orElse(null);
+    }
 }

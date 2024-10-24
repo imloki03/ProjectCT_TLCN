@@ -59,7 +59,7 @@ public class UserController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -89,7 +89,7 @@ public class UserController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -119,7 +119,7 @@ public class UserController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -149,7 +149,7 @@ public class UserController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 }

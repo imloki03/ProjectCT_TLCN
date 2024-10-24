@@ -66,7 +66,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             List<Message> messages = messageRepository.findByProject(project);
             return messages.stream()
-                    .map(this::toResponse)
+                    .map(MessageResponse::new)
                     .toList();
         } catch (Exception e) {
             log.error("Error occurred while fetching messages for project ID: {}", projectId, e);
@@ -79,7 +79,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             List<Message> messages = messageRepository.findByContentContaining(keyword);
             return messages.stream()
-                    .map(this::toResponse)
+                    .map(MessageResponse::new)
                     .toList();
         } catch (Exception e) {
             log.error("Error occurred while searching messages with keyword: {}", keyword, e);
@@ -87,16 +87,6 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    @Override
-    public MessageResponse toResponse(Message message) {
-        return MessageResponse.builder()
-                .sender(message.getSender().getUser().getUsername())
-                .content(message.getContent())
-                .project(message.getProject().getName())
-                .sentTime(message.getSentTime())
-                .isPinned(message.isPinned())
-                .build();
-    }
 
     @Override
     public Message toEntity(MessageRequest request) {

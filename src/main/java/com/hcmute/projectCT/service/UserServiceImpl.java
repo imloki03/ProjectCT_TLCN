@@ -96,34 +96,12 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            return toResponse(user);
+            return new UserResponse(user);
         } catch (Exception e) {
             log.error("Error occurred while fetching user info for username: {}", username, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
         }
     }
-
-    private UserResponse toResponse(User user) {
-        return UserResponse.builder()
-                .username(user.getUsername())
-                .name(user.getName())
-                .email(user.getEmail())
-                .gender(user.getGender())
-                .avatarURL(user.getAvatarURL())
-                .status(UserStatusResponse.builder()
-                        .isActivated(user.getStatus().isActivated())
-                        .isNew(user.getStatus().isNew())
-                        .build())
-                .tagList(user.getTagList().stream()
-                        .map(tag -> TagResponse.builder()
-                                .name(tag.getName())
-                                .type(tag.getType().name())
-                                .description(tag.getDescription())
-                                .build())
-                        .toList())
-                .build();
-    }
-
 
     private User toUserEntity(RegisterRequest request) {
         return User.builder()
