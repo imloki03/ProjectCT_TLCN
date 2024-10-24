@@ -108,7 +108,6 @@ public class UserServiceImpl implements UserService {
                 .username(user.getUsername())
                 .name(user.getName())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .gender(user.getGender())
                 .avatarURL(user.getAvatarURL())
                 .status(UserStatusResponse.builder()
