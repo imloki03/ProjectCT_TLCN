@@ -30,7 +30,7 @@ public class UserResponse {
         this.avatarURL = user.getAvatarURL();
         this.status = new UserStatusResponse(user.getStatus().isActivated(), user.getStatus().isNew());
         this.tagList = user.getTagList().stream()
-                .map(tag -> new TagResponse(tag.getName(), tag.getType().name(), tag.getDescription()))
+                .map(tag -> new TagResponse(tag.getId(), tag.getName(), tag.getType().name(), tag.getDescription()))
                 .collect(Collectors.toList());
     }
 }
