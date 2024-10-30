@@ -17,12 +17,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VersionResponse {
+    private Long id;
     private String name;
     private String description;
     private LocalDateTime createdDate;
     private List<String> taskList;
 
     public VersionResponse(Version version) {
+        this.id = version.getId();
         this.name = version.getName();
         this.description = version.getDescription();
         this.createdDate = version.getCreatedDate();

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageResponse {
+    private Long id;
     private String sender;
     private String content;
     private String project;
@@ -20,6 +21,7 @@ public class MessageResponse {
     private boolean isPinned;
 
     public MessageResponse(Message message) {
+        this.id = message.getId();
         this.sender = message.getSender().getUser().getUsername();
         this.content = message.getContent();
         this.project = message.getProject().getName();
