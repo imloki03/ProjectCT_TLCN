@@ -45,4 +45,5 @@ public class MessageKey {
     public static final String VERSION_UPDATED_SUCCESS = "version.update.success";
     public static final String CHANGE_PASSWORD_SUCCESS = "user.change.password.success";
     public static final String TAG_FETCH_SUCCESS = "tag.fetch.success";
+    public static final String COLLABORATOR_NOT_FOUND = "collaborator.notfound";
 }
