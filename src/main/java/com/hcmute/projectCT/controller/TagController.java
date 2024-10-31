@@ -33,10 +33,10 @@ public class TagController {
     private final MessageUtil messageUtil;
 
     @Operation(
-            summary = "Get User Information",
-            description = "This API retrieves user information by username.",
+            summary = "Get tag information",
+            description = "This API retrieves all tag.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "User information retrieved successfully."),
+                    @ApiResponse(responseCode = "200", description = "Tag information retrieved successfully."),
                     @ApiResponse(responseCode = "500", description = "Internal server error.")
             }
     )
