@@ -1,6 +1,7 @@
 package com.hcmute.projectCT.service;
 
 import com.hcmute.projectCT.constant.MessageKey;
+import com.hcmute.projectCT.dto.User.UserResponse;
 import com.hcmute.projectCT.exception.LoginFailedException;
 import com.hcmute.projectCT.model.User;
 import com.hcmute.projectCT.repository.UserRepository;
@@ -15,11 +16,19 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService{
     final UserRepository userRepository;
     @Override
-    public void login(String username, String password) {
+    public UserResponse login(String username, String password) {
         //xu li authentication sau khi co register
         User user = userRepository.findByUsername(username);
         if (user == null || !user.getPassword().equals(password)) {
             throw new LoginFailedException(HttpStatus.UNAUTHORIZED.value(), MessageKey.LOGIN_FAILED);
         }
+        return UserResponse
+                .builder()
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .avatarURL(user.getAvatarURL())
+                .gender(user.getGender())
+                .build();
     }
 }
