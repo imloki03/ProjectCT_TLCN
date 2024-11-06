@@ -96,7 +96,7 @@ public class PhaseController {
                             responseCode = "200",
                             description = "Get all tasks in phase successfully"),
             })
-    @GetMapping("{projectId}/{phaseId}")
+    @GetMapping("{projectId}/{phaseId}/tasks")
     public ResponseEntity<?> getAllTasksInPhase(@PathVariable Long projectId, @PathVariable Long phaseId){
         List<TaskResponse> taskResponses = phaseService.getAllTaskInPhase(phaseId);
         var respondData = RespondData
