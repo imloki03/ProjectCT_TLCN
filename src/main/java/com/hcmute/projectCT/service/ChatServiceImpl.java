@@ -54,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
                 .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.MESSAGE_NOT_FOUND));
 
         try {
-            message.setPinned(true);
+            message.setPinned(!message.isPinned());
             messageRepository.save(message);
         } catch (Exception e) {
             log.error("Error occurred while pinning message", e);
