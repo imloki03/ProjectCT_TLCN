@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class MessageResponse {
     private Long id;
     private String sender;
+    private String senderAvatar;
     private String content;
     private String project;
     private LocalDateTime sentTime;
@@ -23,6 +24,7 @@ public class MessageResponse {
     public MessageResponse(Message message) {
         this.id = message.getId();
         this.sender = message.getSender().getUser().getUsername();
+        this.senderAvatar = message.getSender().getUser().getAvatarURL();
         this.content = message.getContent();
         this.project = message.getProject().getName();
         this.sentTime = message.getSentTime();

@@ -20,7 +20,8 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private Collaborator sender;
-
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
     private LocalDateTime sentTime;
     private boolean isPinned;
