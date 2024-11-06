@@ -26,7 +26,7 @@ public class ProjectServiceImpl implements ProjectService{
     final UserRepository userRepository;
     final ProjectRepository projectRepository;
     @Override
-    public void createNewProject(String ownerUsername, String projectName, String projectDescription) {
+    public ProjectResponse createNewProject(String ownerUsername, String projectName, String projectDescription) {
         User owner = userRepository.findByUsername(ownerUsername);
         long timestamp = System.currentTimeMillis();
         String shortString = Long.toString(timestamp, 36);
@@ -40,6 +40,7 @@ public class ProjectServiceImpl implements ProjectService{
                 .backlog(new Backlog())
                 .build();
         projectRepository.save(project);
+        return new ProjectResponse(project);
     }
 
     @Override

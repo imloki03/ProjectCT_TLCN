@@ -28,21 +28,21 @@ public class Project {
     private String avatarURL;
     private LocalDateTime createdDate;
 
-    @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private Backlog backlog;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Phase> phaseList;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Message> messageList;
 
-    @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private Media media;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Collaborator> collaboratorList;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Version> versionList;
 }

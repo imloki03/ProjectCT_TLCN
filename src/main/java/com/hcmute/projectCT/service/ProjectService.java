@@ -7,7 +7,7 @@ import com.hcmute.projectCT.model.Project;
 import java.util.List;
 
 public interface ProjectService {
-    void createNewProject(String ownerUsername, String projectName, String projectDescription);
+    ProjectResponse createNewProject(String ownerUsername, String projectName, String projectDescription);
     ProjectResponse getProject(Long projectId);
     List<ProjectResponse> getAllProjectForUser(String username);
     void updateProjectAvatar(Long projectId, String avatarUrl);

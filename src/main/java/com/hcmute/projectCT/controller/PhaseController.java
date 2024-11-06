@@ -5,6 +5,7 @@ import com.hcmute.projectCT.dto.Phase.PhaseRequest;
 import com.hcmute.projectCT.dto.Phase.PhaseResponse;
 import com.hcmute.projectCT.dto.Phase.UpdatePhaseRequest;
 import com.hcmute.projectCT.dto.RespondData;
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.service.PhaseService;
 import com.hcmute.projectCT.util.MessageUtil;
@@ -82,6 +83,26 @@ public class PhaseController {
                 .builder()
                 .status(HttpStatus.OK.value())
                 .data(phaseResponses)
+                .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                .build();
+        return new ResponseEntity<>(respondData, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get all tasks in phase",
+            description = "This API will get all tasks in phase.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Get all tasks in phase successfully"),
+            })
+    @GetMapping("{projectId}/{phaseId}")
+    public ResponseEntity<?> getAllTasksInPhase(@PathVariable Long projectId, @PathVariable Long phaseId){
+        List<TaskResponse> taskResponses = phaseService.getAllTaskInPhase(phaseId);
+        var respondData = RespondData
+                .builder()
+                .status(HttpStatus.OK.value())
+                .data(taskResponses)
                 .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
                 .build();
         return new ResponseEntity<>(respondData, HttpStatus.OK);

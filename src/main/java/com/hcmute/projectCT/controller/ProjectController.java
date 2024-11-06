@@ -41,10 +41,11 @@ public class ProjectController {
                                               @PathVariable String owner,
                                               @RequestParam String name,
                                               @RequestParam String description){
-        projectService.createNewProject(owner, name, description);
+        ProjectResponse projectResponse = projectService.createNewProject(owner, name, description);
         var respondData = RespondData
                 .builder()
                 .status(HttpStatus.OK.value())
+                .data(projectResponse)
                 .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
                 .build();
         return new ResponseEntity<>(respondData, HttpStatus.OK);
