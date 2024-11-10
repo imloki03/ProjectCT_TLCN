@@ -40,8 +40,12 @@ public class TaskResponse {
         this.endTime = task.getEndTime();
         this.priority = task.getPriority();
         this.subTaskIds = task.getSubtaskIdList();
-        this.parentTaskId = task.getParentTask().getId();
-        this.assigneeUsername = task.getAssignee().getUser().getUsername();
+        if (task.getParentTask()!=null){
+            this.parentTaskId = task.getParentTask().getId();
+        }
+        if (task.getAssignee()!=null){
+            this.assigneeUsername = task.getAssignee().getUser().getUsername();
+        }
         this.status = task.getStatus();
         this.backlogId = task.getBacklog().getId();
     }

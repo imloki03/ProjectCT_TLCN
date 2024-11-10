@@ -14,17 +14,17 @@ import lombok.NoArgsConstructor;
 public class CollaboratorResponse {
     Long id;
     Long userId;
-    String userUsername;
-    String userName;
-    String userAvatarURL;
+    String username;
+    String name;
+    String avatarURL;
     Permission permission;
 
     public CollaboratorResponse(Collaborator collaborator) {
         this.id = collaborator.getId();
         this.userId = collaborator.getUser().getId();
-        this.userUsername = collaborator.getUser().getUsername();
-        this.userName = collaborator.getUser().getName();
-        this.userAvatarURL = collaborator.getUser().getAvatarURL();
+        this.username = collaborator.getUser().getUsername();
+        this.name = collaborator.getUser().getName();
+        this.avatarURL = collaborator.getUser().getAvatarURL();
         this.permission = collaborator.getPermission();
     }
 }
