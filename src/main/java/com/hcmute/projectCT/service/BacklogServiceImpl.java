@@ -54,7 +54,9 @@ public class BacklogServiceImpl implements BacklogService{
         List<Task> tasks = taskRepository.findByBacklog_Project_Id(projectId);
         List<TaskResponse> taskResponses = new ArrayList<>();
         for (Task task : tasks) {
-            taskResponses.add(new TaskResponse(task));
+            if (task.getBacklog()!=null) {
+                taskResponses.add(new TaskResponse(task));
+            }
         }
         return taskResponses;
     }
@@ -79,9 +81,18 @@ public class BacklogServiceImpl implements BacklogService{
     public void moveTaskToPhase(Long taskId, Long phaseId) {
         Task task = taskRepository.findById(taskId).orElse(null);
         Phase phase = phaseRepository.findById(phaseId).orElse(null);
+        moveAllSubtaskToPhase(task, phase);
+        taskRepository.save(task);
+    }
+
+    public void moveAllSubtaskToPhase(Task task, Phase phase) {
         task.setPhase(phase);
         task.setBacklog(null);
-        taskRepository.save(task);
+        if (task.getSubTask() != null) {
+            for (Task subTask : task.getSubTask()) {
+                moveAllSubtaskToPhase(subTask, phase);
+            }
+        }
     }
 
     @Override

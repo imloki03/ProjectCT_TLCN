@@ -36,9 +36,17 @@ public class ProjectServiceImpl implements ProjectService{
                 .description(projectDescription)
                 .urlName(projectName.toLowerCase()+shortString)
                 .createdDate(LocalDateTime.now())
-                .media(new Media())
-                .backlog(new Backlog())
                 .build();
+        Media media = Media
+                .builder()
+                .project(project)
+                .build();
+        Backlog backlog = Backlog
+                .builder()
+                .project(project)
+                .build();
+        project.setMedia(media);
+        project.setBacklog(backlog);
         projectRepository.save(project);
         return new ProjectResponse(project);
     }
