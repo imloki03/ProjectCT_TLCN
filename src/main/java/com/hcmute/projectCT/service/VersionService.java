@@ -1,5 +1,6 @@
 package com.hcmute.projectCT.service;
 
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.dto.Version.VersionRequest;
 import com.hcmute.projectCT.dto.Version.VersionResponse;
 import com.hcmute.projectCT.model.Version;
@@ -22,4 +23,5 @@ public interface VersionService {
 
     Version toEntity(Version existingVersion, VersionRequest versionRequest);
 
+    List<TaskResponse> getAvailableTasksInPhase(Long projectId);
 }

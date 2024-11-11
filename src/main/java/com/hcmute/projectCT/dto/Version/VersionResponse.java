@@ -1,5 +1,6 @@
 package com.hcmute.projectCT.dto.Version;
 
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.model.Task;
 import com.hcmute.projectCT.model.Version;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class VersionResponse {
     private String name;
     private String description;
     private LocalDateTime createdDate;
-    private List<String> taskList;
+    private List<TaskResponse> taskList;
 
     public VersionResponse(Version version) {
         this.id = version.getId();
@@ -30,8 +31,7 @@ public class VersionResponse {
         this.createdDate = version.getCreatedDate();
         this.taskList = Optional.ofNullable(version.getTaskList())
                 .map(tasks -> tasks.stream()
-                        .map(Task::getId)
-                        .map(String::valueOf)
+                        .map(TaskResponse::new)
                         .collect(Collectors.toList()))
                 .orElse(null);
     }
