@@ -12,4 +12,6 @@ public interface UserService {
     public UserResponse getUserInfo(String username);
 
     public void changePassword(ChangePasswordRequest request, String username);
+
+    void activateUser(String username);
 }

@@ -210,4 +210,40 @@ public class UserController {
             return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
+
+    @Operation(
+            summary = "Activate User Account",
+            description = "This API retrieves user information by username.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Activate successfully."),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+            }
+    )
+    @PatchMapping("/{username}/activate")
+    public ResponseEntity<?> activateUserAccount(
+            @Parameter(description = "The username of the user to activate.")
+            @PathVariable String username) {
+        try {
+            userService.activateUser(username);
+            var respondData = RespondData.builder()
+                    .status(HttpStatus.OK.value())
+                    .desc(messageUtil.getMessage(MessageKey.USER_ACTIVATE_SUCCESS))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (RegistrationException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (InternalServerException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+    }
 }

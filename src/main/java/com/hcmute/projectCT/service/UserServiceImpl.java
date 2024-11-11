@@ -120,6 +120,23 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void activateUser(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RegistrationException(HttpStatus.NOT_FOUND.value(), MessageKey.USER_NOT_FOUND);
+        }
+
+        try {
+            user.getStatus().setActivated(true);
+            userRepository.save(user);
+        }
+        catch (Exception e) {
+            log.error("Error occurred during change user password", e);
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
+    }
+
     private User toUserEntity(RegisterRequest request) {
         return User.builder()
                 .username(request.getUsername())
@@ -137,5 +154,4 @@ public class UserServiceImpl implements UserService {
                 .tagList(tagRepository.findAllById(request.getTagList()))
                 .build();
     }
-
 }
