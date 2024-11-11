@@ -21,6 +21,6 @@ public class Media {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @OneToMany(mappedBy = "media")
+    @OneToMany(mappedBy = "media", cascade = CascadeType.REMOVE)
     private List<MediaContent> mediaList;
 }

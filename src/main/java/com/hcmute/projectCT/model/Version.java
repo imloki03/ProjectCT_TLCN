@@ -31,4 +31,9 @@ public class Version {
 
     @ManyToOne
     private Project project;
+
+    @PreRemove
+    private void preRemove() {
+        taskList.forEach(task -> task.setVersion(null));
+    }
 }
