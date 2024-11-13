@@ -95,7 +95,7 @@ public class MediaServiceImpl implements MediaService {
                 .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.MEDIA_NOT_FOUND));
 
         try {
-            return toResponse(mediaContent);
+            return new MediaResponse(mediaContent);
         } catch (Exception e) {
             log.error("Error occurred while fetching media info for ID: {}", id, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
@@ -109,7 +109,7 @@ public class MediaServiceImpl implements MediaService {
 
         try {
             List<MediaContent> mediaList = mediaContentRepository.findByMedia(project.getMedia());
-            return mediaList.stream().map(this::toResponse).collect(Collectors.toList());
+            return mediaList.stream().map(MediaResponse::new).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error occurred while fetching media for project ID: {}", projectId, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
@@ -138,21 +138,6 @@ public class MediaServiceImpl implements MediaService {
                 .type(mediaRequest.getFilename() != null
                         ? convertFilenameToMediaType(mediaRequest.getFilename())
                         : existingMedia.getType())
-                .build();
-    }
-
-    @Override
-    public MediaResponse toResponse(MediaContent mediaContent) {
-        return MediaResponse.builder()
-                .name(mediaContent.getName())
-                .description(mediaContent.getDescription())
-                .uploadTime(mediaContent.getUploadTime())
-                .type(mediaContent.getType().name())
-                .filename(mediaContent.getFilename())
-                .link(mediaContent.getLink())
-                .previousVersion( Optional.ofNullable(mediaContent.getPreviousVersion())
-                        .map(MediaContent::getId)
-                        .orElse(null))
                 .build();
     }
 

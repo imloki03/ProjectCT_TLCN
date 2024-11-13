@@ -2,6 +2,7 @@ package com.hcmute.projectCT.controller;
 
 import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.RespondData;
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.dto.Version.VersionRequest;
 import com.hcmute.projectCT.dto.Version.VersionResponse;
 import com.hcmute.projectCT.exception.InternalServerException;
@@ -52,7 +53,7 @@ public class VersionController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -80,7 +81,7 @@ public class VersionController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -107,7 +108,7 @@ public class VersionController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -135,7 +136,7 @@ public class VersionController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -163,7 +164,36 @@ public class VersionController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+    }
+
+    @Operation(
+            summary = "Get available task of a phase",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Tasks retrieved successfully"),
+                    @ApiResponse(responseCode = "404", description = "Phase or task not found")
+            }
+    )
+    @GetMapping("phase/{phaseId}/tasks")
+    public ResponseEntity<?> getAvailableTasksInPhase(
+            @Parameter(description = "ID of the phase to retrieve tasks for")
+            @PathVariable
+            Long phaseId) {
+        try {
+            List<TaskResponse> tasks = versionService.getAvailableTasksInPhase(phaseId);
+            var respondData = RespondData.builder()
+                    .status(HttpStatus.OK.value())
+                    .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                    .data(tasks)
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        } catch (InternalServerException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 }

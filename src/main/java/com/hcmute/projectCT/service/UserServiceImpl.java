@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            return toResponse(user);
+            return new UserResponse(user);
         } catch (Exception e) {
             log.error("Error occurred while fetching user info for username: {}", username, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
@@ -134,8 +134,39 @@ public class UserServiceImpl implements UserService {
                                 .build())
                         .toList())
                 .build();
+      
+    public void changePassword(ChangePasswordRequest request, String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RegistrationException(HttpStatus.NOT_FOUND.value(), MessageKey.USER_NOT_FOUND);
+        }
+
+        try {
+            user.setPassword(request.getPassword());
+            userRepository.save(user);
+        }
+        catch (Exception e) {
+            log.error("Error occurred during change user password", e);
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
     }
 
+    @Override
+    public void activateUser(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RegistrationException(HttpStatus.NOT_FOUND.value(), MessageKey.USER_NOT_FOUND);
+        }
+
+        try {
+            user.getStatus().setActivated(true);
+            userRepository.save(user);
+        }
+        catch (Exception e) {
+            log.error("Error occurred during change user password", e);
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
+    }
 
     private User toUserEntity(RegisterRequest request) {
         return User.builder()
@@ -154,5 +185,4 @@ public class UserServiceImpl implements UserService {
                 .tagList(tagRepository.findAllById(request.getTagList()))
                 .build();
     }
-
 }

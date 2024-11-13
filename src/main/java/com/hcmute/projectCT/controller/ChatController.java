@@ -9,12 +9,14 @@ import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.model.Message;
 import com.hcmute.projectCT.service.ChatService;
 import com.hcmute.projectCT.util.MessageUtil;
+import com.hcmute.projectCT.util.WebUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,6 +25,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @RestController
@@ -33,6 +36,7 @@ public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageUtil messageUtil;
+    private final MessageSource messageSource;
 
     @Operation(
             summary = "Send a message",
@@ -42,17 +46,16 @@ public class ChatController {
                     @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
             })
     @MessageMapping("/send")
-    @SendTo("/public")
-    public RespondData<Message> sendMessage(MessageRequest request) {
+    public RespondData<MessageResponse> sendMessage(MessageRequest request) {
         try {
             var message = chatService.sendMessage(request);
-            return RespondData.<Message>builder()
+            return RespondData.<MessageResponse>builder()
                     .status(HttpStatus.OK.value())
                     .data(message)
                     .build();
         } catch (InternalServerException e) {
-            messagingTemplate.convertAndSend("/private/" + request.getSender(), e.getMessage());
-            return RespondData.<Message>builder()
+            messagingTemplate.convertAndSend("/private/" + request.getSender(), messageSource.getMessage(e.getMessage(), new Object[]{}, Locale.ENGLISH));
+            return RespondData.<MessageResponse>builder()
                     .status(e.getErrorCode())
                     .data(null)
                     .build();
@@ -81,7 +84,7 @@ public class ChatController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -108,7 +111,7 @@ public class ChatController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 
@@ -135,7 +138,7 @@ public class ChatController {
                     .status(e.getErrorCode())
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 

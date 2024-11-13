@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,13 +32,16 @@ public class ChatServiceImpl implements ChatService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final CollaboratorRepository collaboratorRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public Message sendMessage(MessageRequest request) {
+    public MessageResponse sendMessage(MessageRequest request) {
         try {
             Message message = toEntity(request);
             messageRepository.save(message);
-            return message;
+            MessageResponse messageResponse = new MessageResponse(message);
+            messagingTemplate.convertAndSend("/public/project/" + request.getProject(), messageResponse);
+            return messageResponse;
         } catch (Exception e) {
             log.error("Error occurred during sending message", e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.MESSAGE_SENT_ERROR);
@@ -50,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
                 .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.MESSAGE_NOT_FOUND));
 
         try {
-            message.setPinned(true);
+            message.setPinned(!message.isPinned());
             messageRepository.save(message);
         } catch (Exception e) {
             log.error("Error occurred while pinning message", e);
@@ -66,7 +70,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             List<Message> messages = messageRepository.findByProject(project);
             return messages.stream()
-                    .map(this::toResponse)
+                    .map(MessageResponse::new)
                     .toList();
         } catch (Exception e) {
             log.error("Error occurred while fetching messages for project ID: {}", projectId, e);
@@ -79,7 +83,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             List<Message> messages = messageRepository.findByContentContaining(keyword);
             return messages.stream()
-                    .map(this::toResponse)
+                    .map(MessageResponse::new)
                     .toList();
         } catch (Exception e) {
             log.error("Error occurred while searching messages with keyword: {}", keyword, e);
@@ -87,16 +91,6 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    @Override
-    public MessageResponse toResponse(Message message) {
-        return MessageResponse.builder()
-                .sender(message.getSender().getUser().getUsername())
-                .content(message.getContent())
-                .project(message.getProject().getName())
-                .sentTime(message.getSentTime())
-                .isPinned(message.isPinned())
-                .build();
-    }
 
     @Override
     public Message toEntity(MessageRequest request) {
@@ -111,7 +105,7 @@ public class ChatServiceImpl implements ChatService {
 
         Optional<Collaborator> collaboratorOpt = collaboratorRepository.findByProjectAndUser(projectOpt.get(), sender);
         if (collaboratorOpt.isEmpty()) {
-            throw new InternalServerException(HttpStatus.BAD_REQUEST.value(), MessageKey.USER_NOT_FOUND);
+            throw new InternalServerException(HttpStatus.BAD_REQUEST.value(), MessageKey.COLLABORATOR_NOT_FOUND);
         }
 
         return Message.builder()
