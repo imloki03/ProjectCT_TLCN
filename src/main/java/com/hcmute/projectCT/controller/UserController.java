@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("api/v1/user")
@@ -245,5 +247,17 @@ public class UserController {
                     .build();
             return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUser(@RequestParam String q){
+        List<UserResponse> userResponses = userService.searchUsername(q);
+        var respondData = RespondData
+                .builder()
+                .status(HttpStatus.OK.value())
+                .data(userResponses)
+                .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                .build();
+        return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
 }

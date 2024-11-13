@@ -47,6 +47,8 @@ public class TaskResponse {
             this.assigneeUsername = task.getAssignee().getUser().getUsername();
         }
         this.status = task.getStatus();
-        this.backlogId = task.getBacklog().getId();
+        if (task.getBacklog()!=null){
+            this.backlogId = task.getBacklog().getId();
+        }
     }
 }

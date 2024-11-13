@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -104,6 +106,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserResponse> searchUsername(String keyword) {
+        List<User> users = userRepository.findByUsernameStartsWith(keyword);
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user : users){
+            userResponses.add(toResponse(user));
+        }
+        return userResponses;
+    }
+
+    private UserResponse toResponse(User user) {
+        return UserResponse.builder()
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .avatarURL(user.getAvatarURL())
+                .status(UserStatusResponse.builder()
+                        .isActivated(user.getStatus().isActivated())
+                        .isNew(user.getStatus().isNew())
+                        .build())
+                .tagList(user.getTagList().stream()
+                        .map(tag -> TagResponse.builder()
+                                .name(tag.getName())
+                                .type(tag.getType().name())
+                                .description(tag.getDescription())
+                                .build())
+                        .toList())
+                .build();
+      
     public void changePassword(ChangePasswordRequest request, String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
