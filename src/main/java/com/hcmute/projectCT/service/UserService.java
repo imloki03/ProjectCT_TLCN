@@ -5,6 +5,8 @@ import com.hcmute.projectCT.dto.User.EditUserAvatarRequest;
 import com.hcmute.projectCT.dto.User.RegisterRequest;
 import com.hcmute.projectCT.dto.User.UserResponse;
 
+import java.util.List;
+
 public interface UserService {
     public void register(RegisterRequest request) ;
 
@@ -13,4 +15,5 @@ public interface UserService {
     public void editProfileAvatar(EditUserAvatarRequest request, String username);
 
     public UserResponse getUserInfo(String username);
+    public List<UserResponse> searchUsername(String keyword);
 }

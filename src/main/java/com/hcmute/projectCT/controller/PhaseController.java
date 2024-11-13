@@ -154,9 +154,9 @@ public class PhaseController {
                             responseCode = "200",
                             description = "Assign task successfully"),
             })
-    @PatchMapping("{projectId}/{phaseId}/assign/{assigneeUsername}")
-    public ResponseEntity<?> assignTask(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable String assigneeUsername) {
-        phaseService.assignTask(phaseId, assigneeUsername);
+    @PatchMapping("{projectId}/{phaseId}/{taskId}/assign/{assigneeUsername}")
+    public ResponseEntity<?> assignTask(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable Long taskId, @PathVariable String assigneeUsername) {
+        phaseService.assignTask(taskId, assigneeUsername);
         var respondData = RespondData
                 .builder()
                 .status(HttpStatus.OK.value())
@@ -173,9 +173,9 @@ public class PhaseController {
                             responseCode = "200",
                             description = "Update status successfully"),
             })
-    @PatchMapping("{projectId}/{phaseId}/status/{status}")
-    public ResponseEntity<?> updateStatus(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable Status status) {
-        phaseService.updateTaskStatus(phaseId, status);
+    @PatchMapping("{projectId}/{phaseId}/{taskId}/status/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable Long taskId,@PathVariable Status status) {
+        phaseService.updateTaskStatus(taskId, status);
         var respondData = RespondData
                 .builder()
                 .status(HttpStatus.OK.value())

@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -101,6 +103,16 @@ public class UserServiceImpl implements UserService {
             log.error("Error occurred while fetching user info for username: {}", username, e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
         }
+    }
+
+    @Override
+    public List<UserResponse> searchUsername(String keyword) {
+        List<User> users = userRepository.findByUsernameStartsWith(keyword);
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user : users){
+            userResponses.add(toResponse(user));
+        }
+        return userResponses;
     }
 
     private UserResponse toResponse(User user) {
