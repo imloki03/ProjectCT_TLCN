@@ -1,6 +1,7 @@
 package com.hcmute.projectCT.service;
 
 import com.hcmute.projectCT.dto.Collaborator.CollaboratorResponse;
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Permission;
 import com.hcmute.projectCT.model.Collaborator;
 import com.hcmute.projectCT.model.Project;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Transactional
 @Slf4j
@@ -57,5 +59,13 @@ public class CollaboratorServiceImpl implements CollaboratorService{
     @Override
     public void deleteCollaborator(Long collabId) {
         collaboratorRepository.deleteById(collabId);
+    }
+
+    @Override
+    public List<TaskResponse> getAllCollaboratorAssignedTask(Long collabId) {
+        Collaborator collaborator = collaboratorRepository.findById(collabId).orElse(null);
+        return Objects.requireNonNull(collaborator).getTaskList().stream()
+                .map(TaskResponse::new)
+                .toList();
     }
 }

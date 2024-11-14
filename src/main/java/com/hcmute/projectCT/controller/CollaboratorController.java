@@ -3,6 +3,7 @@ package com.hcmute.projectCT.controller;
 import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.Collaborator.CollaboratorResponse;
 import com.hcmute.projectCT.dto.RespondData;
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Permission;
 import com.hcmute.projectCT.model.Collaborator;
 import com.hcmute.projectCT.service.CollaboratorService;
@@ -102,6 +103,26 @@ public class CollaboratorController {
                 .builder()
                 .status(HttpStatus.OK.value())
                 .desc(messageUtil.getMessage(MessageKey.COLLAB_DELETE_SUCCESS))
+                .build();
+        return new ResponseEntity<>(respondData, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get collaborator all assigned task",
+            description = "This API will get collaborator all assigned task.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Get collaborator assigned task successfully"),
+            })
+    @GetMapping("{collabId}/tasks")
+    public ResponseEntity<?> getAllCollaboratorAssignedTask(@PathVariable Long collabId) {
+        List<TaskResponse> tasks = collaboratorService.getAllCollaboratorAssignedTask(collabId);
+        var respondData = RespondData
+                .builder()
+                .status(HttpStatus.OK.value())
+                .data(tasks)
+                .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
                 .build();
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
