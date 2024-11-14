@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUserInfo(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameOrEmail(username, username);
         if (user == null) {
             throw new RegistrationException(HttpStatus.NOT_FOUND.value(), MessageKey.USER_NOT_FOUND);
         }
@@ -110,30 +110,9 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.findByUsernameStartsWith(keyword);
         List<UserResponse> userResponses = new ArrayList<>();
         for (User user : users){
-            userResponses.add(toResponse(user));
+            userResponses.add(new UserResponse(user));
         }
         return userResponses;
-    }
-
-    private UserResponse toResponse(User user) {
-        return UserResponse.builder()
-                .username(user.getUsername())
-                .name(user.getName())
-                .email(user.getEmail())
-                .gender(user.getGender())
-                .avatarURL(user.getAvatarURL())
-                .status(UserStatusResponse.builder()
-                        .isActivated(user.getStatus().isActivated())
-                        .isNew(user.getStatus().isNew())
-                        .build())
-                .tagList(user.getTagList().stream()
-                        .map(tag -> TagResponse.builder()
-                                .name(tag.getName())
-                                .type(tag.getType().name())
-                                .description(tag.getDescription())
-                                .build())
-                        .toList())
-                .build();
     }
 
     public void changePassword(ChangePasswordRequest request, String username) {
