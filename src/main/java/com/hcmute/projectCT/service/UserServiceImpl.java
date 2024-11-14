@@ -134,7 +134,8 @@ public class UserServiceImpl implements UserService {
                                 .build())
                         .toList())
                 .build();
-      
+    }
+
     public void changePassword(ChangePasswordRequest request, String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {

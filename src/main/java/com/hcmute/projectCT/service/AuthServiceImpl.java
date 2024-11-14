@@ -18,7 +18,8 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public UserResponse login(String username, String password) {
         //xu li authentication sau khi co register
-        User user = userRepository.findByUsername(username);
+//        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameOrEmail(username, username);
         if (user == null || !user.getPassword().equals(password)) {
             throw new LoginFailedException(HttpStatus.UNAUTHORIZED.value(), MessageKey.LOGIN_FAILED);
         }
