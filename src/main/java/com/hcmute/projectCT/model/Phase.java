@@ -39,6 +39,6 @@ public class Phase {
 
     @PreRemove
     private void preRemove() {
-        taskList.forEach(task -> task.setVersion(null));
+        taskList.forEach(task -> task.setPhase(null));
     }
 }

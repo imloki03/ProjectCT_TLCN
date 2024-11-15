@@ -27,6 +27,6 @@ public class Backlog {
 
     @PreRemove
     private void preRemove() {
-        taskList.forEach(task -> task.setVersion(null));
+        taskList.forEach(task -> task.setBacklog(null));
     }
 }
