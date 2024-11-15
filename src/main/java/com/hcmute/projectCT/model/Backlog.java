@@ -24,4 +24,9 @@ public class Backlog {
 
     @OneToMany(mappedBy = "backlog")
     private List<Task> taskList;
+
+    @PreRemove
+    private void preRemove() {
+        taskList.forEach(task -> task.setVersion(null));
+    }
 }
