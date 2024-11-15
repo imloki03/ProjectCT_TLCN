@@ -36,4 +36,9 @@ public class Phase {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @PreRemove
+    private void preRemove() {
+        taskList.forEach(task -> task.setVersion(null));
+    }
 }
