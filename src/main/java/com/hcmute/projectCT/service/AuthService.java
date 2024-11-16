@@ -1,7 +1,8 @@
 package com.hcmute.projectCT.service;
 
+import com.hcmute.projectCT.dto.AuthResponse;
 import com.hcmute.projectCT.dto.User.UserResponse;
 
 public interface AuthService {
-    UserResponse login(String username, String password);
+    AuthResponse login(String username, String password);
 }
