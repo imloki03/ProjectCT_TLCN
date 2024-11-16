@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RespondData<T> {
-    private int status;
+public class AuthResponse<T> {
     private T data;
-    private String desc;
     private String token;
 }

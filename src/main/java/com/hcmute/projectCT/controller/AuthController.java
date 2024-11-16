@@ -1,6 +1,7 @@
 package com.hcmute.projectCT.controller;
 
 import com.hcmute.projectCT.constant.MessageKey;
+import com.hcmute.projectCT.dto.AuthResponse;
 import com.hcmute.projectCT.dto.RespondData;
 import com.hcmute.projectCT.dto.User.LoginRequest;
 import com.hcmute.projectCT.dto.User.UserResponse;
@@ -41,12 +42,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            UserResponse userResponse = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+            AuthResponse authResponse = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
             var respondData = RespondData
                     .builder()
                     .status(HttpStatus.OK.value())
-                    .data(userResponse)
+                    .data(authResponse.getData())
                     .desc(messageUtil.getMessage(MessageKey.LOGIN_SUCCESS))
+                    .token(authResponse.getToken())
                     .build();
             return new ResponseEntity<>(respondData, HttpStatus.OK);
         } catch (LoginFailedException e){
