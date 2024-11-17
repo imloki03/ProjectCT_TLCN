@@ -81,6 +81,7 @@ public class BacklogServiceImpl implements BacklogService{
     public void moveTaskToPhase(Long taskId, Long phaseId) {
         Task task = taskRepository.findById(taskId).orElse(null);
         Phase phase = phaseRepository.findById(phaseId).orElse(null);
+        task.setParentTask(null);
         moveAllSubtaskToPhase(task, phase);
         taskRepository.save(task);
     }
