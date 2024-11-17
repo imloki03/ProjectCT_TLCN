@@ -34,7 +34,7 @@ public class ProjectServiceImpl implements ProjectService{
                 .owner(owner)
                 .name(projectName)
                 .description(projectDescription)
-                .urlName(projectName.toLowerCase()+shortString)
+                .urlName(projectName.replaceAll("[^a-zA-Z0-9]", "").toLowerCase()+shortString)
                 .createdDate(LocalDateTime.now())
                 .build();
         Media media = Media
