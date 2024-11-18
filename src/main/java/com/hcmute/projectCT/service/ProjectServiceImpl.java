@@ -2,10 +2,9 @@ package com.hcmute.projectCT.service;
 
 import com.hcmute.projectCT.dto.Project.ProjectResponse;
 import com.hcmute.projectCT.dto.Project.UpdateProjectRequest;
-import com.hcmute.projectCT.model.Backlog;
-import com.hcmute.projectCT.model.Media;
-import com.hcmute.projectCT.model.Project;
-import com.hcmute.projectCT.model.User;
+import com.hcmute.projectCT.enums.Permission;
+import com.hcmute.projectCT.model.*;
+import com.hcmute.projectCT.repository.CollaboratorRepository;
 import com.hcmute.projectCT.repository.ProjectRepository;
 import com.hcmute.projectCT.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -25,6 +24,8 @@ public class ProjectServiceImpl implements ProjectService{
 
     final UserRepository userRepository;
     final ProjectRepository projectRepository;
+    private final CollaboratorRepository collaboratorRepository;
+
     @Override
     public ProjectResponse createNewProject(String ownerUsername, String projectName, String projectDescription) {
         User owner = userRepository.findByUsername(ownerUsername);
@@ -45,9 +46,16 @@ public class ProjectServiceImpl implements ProjectService{
                 .builder()
                 .project(project)
                 .build();
+        Collaborator collab = Collaborator
+                .builder()
+                .project(project)
+                .user(owner)
+                .permission(Permission.OWNER)
+                .build();
         project.setMedia(media);
         project.setBacklog(backlog);
         projectRepository.save(project);
+        collaboratorRepository.save(collab);
         return new ProjectResponse(project);
     }
 

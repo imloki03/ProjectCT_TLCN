@@ -4,8 +4,11 @@ import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.User.*;
 import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.exception.RegistrationException;
+import com.hcmute.projectCT.model.Collaborator;
+import com.hcmute.projectCT.model.Project;
 import com.hcmute.projectCT.model.User;
 import com.hcmute.projectCT.model.UserStatus;
+import com.hcmute.projectCT.repository.CollaboratorRepository;
 import com.hcmute.projectCT.repository.TagRepository;
 import com.hcmute.projectCT.repository.UserRepository;
 import com.hcmute.projectCT.repository.UserStatusRepository;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Transactional
@@ -28,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserStatusRepository userStatusRepository;
     private final TagRepository tagRepository;
+    private final CollaboratorRepository collaboratorRepository;
 
     @Override
     public void register(RegisterRequest request) {
@@ -146,6 +151,19 @@ public class UserServiceImpl implements UserService {
             log.error("Error occurred during change user password", e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
         }
+    }
+
+    @Override
+    public List<AllAssignedTaskResponse> getAllAssignedTaskAtAllProject(String username) {
+        User user = userRepository.findByUsername(username);
+        List<Project> projects = user.getProjectList();
+        List<AllAssignedTaskResponse> tasks = new ArrayList<>();
+        for (Project project : projects) {
+            Collaborator collab = collaboratorRepository.findByProjectAndUser(project, user).orElse(null);
+            if (!collab.getTaskList().isEmpty())
+                tasks.add(new AllAssignedTaskResponse(Objects.requireNonNull(collab).getTaskList(), project));
+        }
+        return tasks;
     }
 
     private User toUserEntity(RegisterRequest request) {

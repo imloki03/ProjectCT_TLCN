@@ -17,5 +17,7 @@ public interface UserService {
   
     public void changePassword(ChangePasswordRequest request, String username);
 
-    void activateUser(String username);
+    public void activateUser(String username);
+
+    public List<AllAssignedTaskResponse> getAllAssignedTaskAtAllProject(String username);
 }

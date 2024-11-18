@@ -3,8 +3,6 @@ package com.hcmute.projectCT.service;
 import com.hcmute.projectCT.dto.Phase.PhaseRequest;
 import com.hcmute.projectCT.dto.Phase.PhaseResponse;
 import com.hcmute.projectCT.dto.Phase.UpdatePhaseRequest;
-import com.hcmute.projectCT.dto.Project.ProjectResponse;
-import com.hcmute.projectCT.dto.Project.UpdateProjectRequest;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.model.*;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Transactional
 @Slf4j
@@ -27,6 +26,7 @@ public class PhaseServiceImpl implements PhaseService{
     final PhaseRepository phaseRepository;
     final ProjectRepository projectRepository;
     final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void createNewPhase(Long projectId, PhaseRequest phaseRequest) {
@@ -87,9 +87,12 @@ public class PhaseServiceImpl implements PhaseService{
 
     @Override
     public void assignTask(Long taskId, String assigneeUsername) {
+        User assignee = userRepository.findByUsername(assigneeUsername);
         Task task = taskRepository.findById(taskId).orElse(null);
-        Collaborator collaborator = collaboratorRepository.findByUser_Username(assigneeUsername);
-        task.setAssignee(collaborator);
+        //By project task even it's in backlog or phase
+        Project project = Objects.requireNonNull(task).getPhase() != null ? task.getPhase().getProject() : task.getBacklog(). getProject();
+        Collaborator collaborator = collaboratorRepository.findByProjectAndUser(project, assignee).orElse(null);
+        Objects.requireNonNull(task).setAssignee(collaborator);
         taskRepository.save(task);
     }
 
