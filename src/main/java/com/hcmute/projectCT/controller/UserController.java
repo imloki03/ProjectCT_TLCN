@@ -260,4 +260,25 @@ public class UserController {
                 .build();
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
+
+    @Operation(
+            summary = "Get all task assigned to user all over system from all project",
+            description = "This API get all task assigned to user all over system from all project.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Get tasks successfully."),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+            }
+    )
+    @GetMapping("/{username}/tasks")
+    public ResponseEntity<?> getAllAssignedTaskAtAllProject(@Parameter(description = "The username of the user to activate.")
+                                                            @PathVariable String username){
+        List<AllAssignedTaskResponse> tasks = userService.getAllAssignedTaskAtAllProject(username);
+        var respondData = RespondData
+                .builder()
+                .status(HttpStatus.OK.value())
+                .data(tasks)
+                .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                .build();
+        return new ResponseEntity<>(respondData, HttpStatus.OK);
+    }
 }

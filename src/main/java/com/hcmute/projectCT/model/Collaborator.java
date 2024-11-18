@@ -34,4 +34,9 @@ public class Collaborator {
 
     @OneToMany(mappedBy = "assignee")
     private List<Task> taskList;
+
+    @PreRemove
+    private void preRemove() {
+        taskList.forEach(task -> task.setAssignee(null));
+    }
 }
