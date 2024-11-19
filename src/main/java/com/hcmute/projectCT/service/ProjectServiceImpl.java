@@ -2,6 +2,7 @@ package com.hcmute.projectCT.service;
 
 import com.hcmute.projectCT.dto.Project.ProjectResponse;
 import com.hcmute.projectCT.dto.Project.UpdateProjectRequest;
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Permission;
 import com.hcmute.projectCT.model.*;
 import com.hcmute.projectCT.repository.CollaboratorRepository;
@@ -103,5 +104,42 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public void deleteProject(Long projectId) {
         projectRepository.deleteById(projectId);
+    }
+
+    @Override
+    public ProjectResponse getProjectByUrl(String url) {
+        Project project = projectRepository.findByUrlName(url).orElse(null);
+        if (project == null){
+            return null;
+        }
+        return new ProjectResponse(project);
+    }
+
+    @Override
+    public List<TaskResponse> getAllTaskByProject(String url) {
+        Project project = projectRepository.findByUrlName(url).orElse(null);
+        if (project == null){
+            return null;
+        }
+
+        List<TaskResponse> res = new ArrayList<>();
+        if (project.getBacklog() != null && project.getBacklog().getTaskList() != null) {
+            project.getBacklog().getTaskList()
+                    .stream()
+                    .map(TaskResponse::new)
+                    .forEach(res::add);
+        }
+
+        if (project.getPhaseList() != null && !project.getPhaseList().isEmpty()) {
+            project.getPhaseList().forEach(phase -> {
+                if (phase.getTaskList() != null) {
+                    phase.getTaskList()
+                            .stream()
+                            .map(TaskResponse::new)
+                            .forEach(res::add);
+                }
+            });
+        }
+        return res;
     }
 }
