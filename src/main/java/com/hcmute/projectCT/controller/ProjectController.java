@@ -5,6 +5,7 @@ import com.hcmute.projectCT.dto.Project.ProjectResponse;
 import com.hcmute.projectCT.dto.Project.UpdateProjectImageRequest;
 import com.hcmute.projectCT.dto.Project.UpdateProjectRequest;
 import com.hcmute.projectCT.dto.RespondData;
+import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.model.Project;
 import com.hcmute.projectCT.service.ProjectService;
 import com.hcmute.projectCT.util.MessageUtil;
@@ -153,6 +154,48 @@ public class ProjectController {
                 .builder()
                 .status(HttpStatus.OK.value())
                 .desc(messageUtil.getMessage(MessageKey.PROJECT_DELETE_SUCCESS))
+                .build();
+        return new ResponseEntity<>(respondData, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get project",
+            description = "This API will get a project information by its url.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Get project successfully"),
+            })
+    @GetMapping("/url/{url}")
+    public ResponseEntity<?> getProjectByUrl(@Parameter(description = "Project url")
+                                        @PathVariable String url){
+        ProjectResponse project = projectService.getProjectByUrl(url);
+        var respondData = RespondData
+                .builder()
+                .status(HttpStatus.OK.value())
+                .data(project)
+                .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                .build();
+        return new ResponseEntity<>(respondData, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get all task in project",
+            description = "This API will get all tasks in project.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Get tasks successfully"),
+            })
+    @GetMapping("{url}/tasks")
+    public ResponseEntity<?> getAllTaskByProject(@Parameter(description = "Project's id")
+                                             @PathVariable String url){
+        List<TaskResponse> tasks = projectService.getAllTaskByProject(url);
+        var respondData = RespondData
+                .builder()
+                .status(HttpStatus.OK.value())
+                .data(tasks)
+                .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
                 .build();
         return new ResponseEntity<>(respondData, HttpStatus.OK);
     }
