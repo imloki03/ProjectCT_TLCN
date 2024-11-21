@@ -7,6 +7,7 @@ import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.model.Phase;
 import com.hcmute.projectCT.model.Project;
 import com.hcmute.projectCT.model.Task;
+import com.hcmute.projectCT.model.User;
 import com.hcmute.projectCT.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +63,7 @@ public class BacklogServiceImpl implements BacklogService{
     }
 
     @Override
-    public void updateTask(Long taskId, UpdateTaskRequest req) {
+    public void updateTask(Long projectId, Long taskId, UpdateTaskRequest req) {
         Task task = taskRepository.findById(taskId).orElse(null);
         task.setName(req.getName());
         task.setType(req.getType());
@@ -72,7 +73,7 @@ public class BacklogServiceImpl implements BacklogService{
         task.setPriority(req.getPriority());
         task.setStatus(req.getStatus());
         if (req.getAssigneeUsername() != null){
-            task.setAssignee(collaboratorRepository.findByUser_Username(req.getAssigneeUsername()));
+            task.setAssignee(collaboratorRepository.findByProject_IdAndUser_Username(projectId, req.getAssigneeUsername()));
         }
         taskRepository.save(task);
     }
