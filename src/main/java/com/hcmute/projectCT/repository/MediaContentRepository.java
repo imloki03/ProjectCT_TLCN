@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MediaContentRepository extends JpaRepository<MediaContent, Long> {
     List<MediaContent> findByMedia(Media media);
+
+    List<MediaContent> findByPreviousVersion(MediaContent previousVersion);
 }

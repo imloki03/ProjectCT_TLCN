@@ -177,11 +177,41 @@ public class VersionController {
     )
     @GetMapping("phase/{phaseId}/tasks")
     public ResponseEntity<?> getAvailableTasksInPhase(
-            @Parameter(description = "ID of the phase to retrieve tasks for")
+            @Parameter(description = "ID of the project to retrieve tasks for")
             @PathVariable
             Long phaseId) {
         try {
             List<TaskResponse> tasks = versionService.getAvailableTasksInPhase(phaseId);
+            var respondData = RespondData.builder()
+                    .status(HttpStatus.OK.value())
+                    .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                    .data(tasks)
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        } catch (InternalServerException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+    }
+
+    @Operation(
+            summary = "Get available task of a backlog",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Tasks retrieved successfully"),
+                    @ApiResponse(responseCode = "404", description = "Backlog or task not found")
+            }
+    )
+
+    @GetMapping("project/{projectId}/tasks")
+    public ResponseEntity<?> getAvailableTasksInBacklog(
+            @Parameter(description = "ID of the backlog to retrieve tasks for")
+            @PathVariable
+            Long projectId) {
+        try {
+            List<TaskResponse> tasks = versionService.getAvailableTasksInBacklog(projectId);
             var respondData = RespondData.builder()
                     .status(HttpStatus.OK.value())
                     .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))

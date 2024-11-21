@@ -4,6 +4,7 @@ import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.dto.Version.VersionRequest;
 import com.hcmute.projectCT.dto.Version.VersionResponse;
+import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.model.Project;
 import com.hcmute.projectCT.model.Task;
@@ -15,11 +16,11 @@ import com.hcmute.projectCT.repository.VersionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -115,7 +116,23 @@ public class VersionServiceImpl implements VersionService {
         try {
             List<Task> tasks = Objects.requireNonNull(phaseRepository.findById(phaseId).orElse(null)).getTaskList()
                     .stream()
-                    .filter(t -> t.getVersion() == null)
+                    .filter(t -> (t.getVersion() == null && t.getStatus() != Status.DONE))
+                    .toList();
+            return tasks.stream().map(TaskResponse::new).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public List<TaskResponse> getAvailableTasksInBacklog(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.PROJECT_NOT_FOUND));
+
+        try {
+            List<Task> tasks = Objects.requireNonNull(project.getBacklog().getTaskList())
+                    .stream()
+                    .filter(t -> (t.getVersion() == null && t.getStatus() != Status.DONE))
                     .toList();
             return tasks.stream().map(TaskResponse::new).collect(Collectors.toList());
         } catch (Exception e) {
@@ -130,11 +147,28 @@ public class VersionServiceImpl implements VersionService {
                 .description(versionRequest.getDescription())
                 .createdDate(LocalDateTime.now())
                 .taskList(versionRequest.getTargetedTaskList().stream()
-                                .map(taskId -> taskRepository.findById(taskId)
-                                .orElseThrow(() -> new InternalServerException(
-                                                HttpStatus.NOT_FOUND.value(), MessageKey.TASK_NOT_FOUND)))
-                                .collect(Collectors.toList()))
+                        .flatMap(taskId -> {
+                            Task task = taskRepository.findById(taskId)
+                                    .orElseThrow(() -> new InternalServerException(
+                                            HttpStatus.NOT_FOUND.value(), MessageKey.TASK_NOT_FOUND));
+                            return getTaskAndSubtasks(task).stream();
+                        })
+                        .collect(Collectors.toList()))
                 .build();
+    }
+
+    private List<Task> getTaskAndSubtasks(Task task) {
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(task); // Add the main task
+
+        // Recursively add subtasks
+        if (task.getSubTask() != null && !task.getSubTask().isEmpty()) {
+            for (Task subTask : task.getSubTask()) {
+                tasks.addAll(getTaskAndSubtasks(subTask));
+            }
+        }
+
+        return tasks;
     }
 
     @Override

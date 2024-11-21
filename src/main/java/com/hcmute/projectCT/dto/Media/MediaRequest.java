@@ -21,6 +21,9 @@ public class MediaRequest {
     @Schema(description = "Name of the uploaded file", example = "design_doc_v1.pdf")
     private String filename;
 
+    @Schema(description = "Media weight", example = "1.123KB")
+    private String size;
+
     @Schema(description = "Link to access the media", example = "https://example.com/media/12345")
     private String link;
 }

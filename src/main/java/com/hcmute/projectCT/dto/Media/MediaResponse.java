@@ -15,20 +15,24 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MediaResponse {
+    private Long id;
     private String name;
     private String description;
     private LocalDateTime uploadTime;
     private String type;
     private String filename;
+    private String size;
     private String link;
     private Long previousVersion;
 
     public MediaResponse(MediaContent mediaContent) {
+        this.id = mediaContent.getId();
         this.name = mediaContent.getName();
         this.description = mediaContent.getDescription();
         this.uploadTime = mediaContent.getUploadTime();
         this.type = mediaContent.getType().name();
         this.filename = mediaContent.getFilename();
+        this.size = mediaContent.getSize();
         this.link = mediaContent.getLink();
         this.previousVersion = Optional.ofNullable(mediaContent.getPreviousVersion())
                 .map(MediaContent::getId)
