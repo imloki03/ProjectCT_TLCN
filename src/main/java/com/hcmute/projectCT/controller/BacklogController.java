@@ -99,7 +99,7 @@ public class BacklogController {
             })
     @PutMapping("{projectId}/{taskId}")
     public ResponseEntity<?> updateTask(@PathVariable Long projectId, @PathVariable Long taskId, @RequestBody UpdateTaskRequest updateTaskRequest){
-        backlogService.updateTask(taskId, updateTaskRequest);
+        backlogService.updateTask(projectId, taskId, updateTaskRequest);
         var respondData = RespondData
                 .builder()
                 .status(HttpStatus.OK.value())

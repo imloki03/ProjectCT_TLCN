@@ -77,6 +77,7 @@ public class PhaseServiceImpl implements PhaseService{
         phase.setDescription(updatePhaseRequest.getDescription());
         phase.setStartDate(updatePhaseRequest.getStartDate());
         phase.setEndDate(updatePhaseRequest.getEndDate());
+        phase.setStatus(updatePhaseRequest.getStatus());
         phaseRepository.save(phase);
     }
 
@@ -92,6 +93,7 @@ public class PhaseServiceImpl implements PhaseService{
         //By project task even it's in backlog or phase
         Project project = Objects.requireNonNull(task).getPhase() != null ? task.getPhase().getProject() : task.getBacklog(). getProject();
         Collaborator collaborator = collaboratorRepository.findByProjectAndUser(project, assignee).orElse(null);
+        log.error(assigneeUsername);
         Objects.requireNonNull(task).setAssignee(collaborator);
         taskRepository.save(task);
     }

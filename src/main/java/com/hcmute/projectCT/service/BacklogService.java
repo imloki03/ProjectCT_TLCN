@@ -11,7 +11,7 @@ public interface BacklogService {
     void createNewTask(Long projectId, TaskRequest taskReq);
     TaskResponse getTask(Long taskId);
     List<TaskResponse> getAllTasksInBacklogs(Long projectId);
-    void updateTask(Long taskId, UpdateTaskRequest req);
+    void updateTask(Long projectId, Long taskId, UpdateTaskRequest req);
     void moveTaskToPhase(Long taskId, Long phaseId);
     void deleteTask(Long taskId);
 }

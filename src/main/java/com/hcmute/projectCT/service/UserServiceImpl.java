@@ -112,7 +112,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> searchUsername(String keyword) {
-        List<User> users = userRepository.findByUsernameStartsWith(keyword);
+        if (keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<User> users = userRepository.findByUsernameStartsWithOrNameContains(keyword, keyword);
         List<UserResponse> userResponses = new ArrayList<>();
         for (User user : users){
             userResponses.add(new UserResponse(user));

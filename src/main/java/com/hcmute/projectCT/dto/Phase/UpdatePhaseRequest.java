@@ -18,4 +18,5 @@ public class UpdatePhaseRequest {
     String description;
     LocalDate startDate;
     LocalDate endDate;
+    Status status;
 }
