@@ -62,6 +62,13 @@ public class MediaServiceImpl implements MediaService {
         MediaContent mediaContent = mediaContentRepository.findById(id)
                 .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.MEDIA_NOT_FOUND));
 
+        List<MediaContent> childMediaContents = mediaContentRepository.findByPreviousVersion(mediaContent);
+
+        for (MediaContent child : childMediaContents) {
+            child.setPreviousVersion(null);
+            mediaContentRepository.save(child);
+        }
+
         try {
             mediaContentRepository.delete(mediaContent);
         } catch (Exception e) {
@@ -122,6 +129,7 @@ public class MediaServiceImpl implements MediaService {
                 .name(mediaRequest.getName())
                 .description(mediaRequest.getDescription())
                 .filename(mediaRequest.getFilename())
+                .size(mediaRequest.getSize())
                 .link(mediaRequest.getLink())
                 .type(convertFilenameToMediaType(mediaRequest.getFilename()))
                 .uploadTime(LocalDateTime.now())

@@ -19,6 +19,8 @@ public interface VersionService {
 
     List<VersionResponse> getVersionsByProject(Long projectId);
 
+    List<TaskResponse> getAvailableTasksInBacklog(Long projectId);
+
     Version toEntity(VersionRequest versionRequest);
 
     Version toEntity(Version existingVersion, VersionRequest versionRequest);

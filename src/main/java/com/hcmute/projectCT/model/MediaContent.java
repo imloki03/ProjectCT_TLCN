@@ -21,6 +21,7 @@ public class MediaContent {
     private String name;
     private String description;
     private String filename;
+    private String size;
     private LocalDateTime uploadTime;
 
     @Enumerated(EnumType.STRING)
