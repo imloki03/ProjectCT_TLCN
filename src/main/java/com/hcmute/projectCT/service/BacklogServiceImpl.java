@@ -72,8 +72,10 @@ public class BacklogServiceImpl implements BacklogService{
         task.setEndTime(req.getEndTime());
         task.setPriority(req.getPriority());
         task.setStatus(req.getStatus());
-        if (req.getAssigneeUsername() != null){
+        log.error("name: "+req.getAssigneeUsername());
+        if (req.getAssigneeUsername()!=null && !req.getAssigneeUsername().trim().isEmpty()){
             task.setAssignee(collaboratorRepository.findByProject_IdAndUser_Username(projectId, req.getAssigneeUsername()));
+            log.error(collaboratorRepository.findByProject_IdAndUser_Username(projectId, req.getAssigneeUsername()).getUser().getUsername());
         }
         taskRepository.save(task);
     }

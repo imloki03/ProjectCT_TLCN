@@ -88,15 +88,37 @@ public class PhaseServiceImpl implements PhaseService{
 
     @Override
     public void assignTask(Long taskId, String assigneeUsername) {
+        // Lấy assignee từ user
         User assignee = userRepository.findByUsername(assigneeUsername);
+        if (assignee == null) {
+            throw new IllegalArgumentException("User with username " + assigneeUsername + " does not exist.");
+        }
+
+        // Lấy task từ taskId
         Task task = taskRepository.findById(taskId).orElse(null);
-        //By project task even it's in backlog or phase
-        Project project = Objects.requireNonNull(task).getPhase() != null ? task.getPhase().getProject() : task.getBacklog(). getProject();
+        if (task == null) {
+            throw new IllegalArgumentException("Task with ID " + taskId + " does not exist.");
+        }
+
+        // Xác định project liên kết với task
+        Project project = task.getPhase() != null ? task.getPhase().getProject() : task.getBacklog().getProject();
+
+        // Tìm collaborator từ user và project
         Collaborator collaborator = collaboratorRepository.findByProjectAndUser(project, assignee).orElse(null);
-        log.error(assigneeUsername);
-        Objects.requireNonNull(task).setAssignee(collaborator);
+        if (collaborator == null) {
+            throw new IllegalArgumentException("No collaborator found for user " + assigneeUsername + " in project " + project.getId());
+        }
+
+        // Log để kiểm tra collaborator và assignee
+        log.info("Assigning task: Task ID = {}, Assignee ID = {}", taskId, collaborator.getId());
+
+        // Gán assignee cho task
+        task.setAssignee(collaborator);
+
+        // Lưu task sau khi gán assignee
         taskRepository.save(task);
     }
+
 
     @Override
     public void updateTaskStatus(Long taskId, Status status) {
