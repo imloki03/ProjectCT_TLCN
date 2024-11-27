@@ -16,6 +16,7 @@ public class MessageResponse {
     private Long id;
     private String sender;
     private String senderAvatar;
+    private String senderUsername;
     private String content;
     private String project;
     private LocalDateTime sentTime;
@@ -23,8 +24,9 @@ public class MessageResponse {
 
     public MessageResponse(Message message) {
         this.id = message.getId();
-        this.sender = message.getSender().getUser().getUsername();
+        this.sender = message.getSender().getUser().getName();
         this.senderAvatar = message.getSender().getUser().getAvatarURL();
+        this.senderUsername = message.getSender().getUser().getUsername();
         this.content = message.getContent();
         this.project = message.getProject().getName();
         this.sentTime = message.getSentTime();

@@ -122,11 +122,13 @@ public class ChatController {
                     @ApiResponse(responseCode = "200", description = "Messages found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
             })
-    @GetMapping("/search")
-    public ResponseEntity<?> searchMessages(@Parameter(description = "The keyword to search for")
+    @GetMapping("/project/{projectId}/search")
+    public ResponseEntity<?> searchMessages(@Parameter(description = "The id of the project that messages going to be fetched")
+                                            @PathVariable Long projectId,
+                                            @Parameter(description = "The keyword to search for")
                                             @RequestParam String keyword) {
         try {
-            List<MessageResponse> messages = chatService.searchMessages(keyword);
+            List<MessageResponse> messages = chatService.searchMessages(projectId, keyword);
             var respondData = RespondData.builder()
                     .status(HttpStatus.OK.value())
                     .desc(messageUtil.getMessage(MessageKey.MESSAGES_RETRIEVED_SUCCESS))

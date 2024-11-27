@@ -10,6 +10,6 @@ public interface ChatService {
     public MessageResponse sendMessage(MessageRequest request);
     public void pinMessage(Long id);
     public List<MessageResponse> getMessagesByProject(Long projectId);
-    public List<MessageResponse> searchMessages(String keyword);
+    public List<MessageResponse> searchMessages(Long projectId, String keyword);
     public Message toEntity(MessageRequest request);
 }
