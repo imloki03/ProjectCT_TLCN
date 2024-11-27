@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByProject(Project project);
-
+    List<Message> findByProjectAndContentContaining(Project project, String keyword);
     List<Message> findByContentContaining(String keyword);
 }

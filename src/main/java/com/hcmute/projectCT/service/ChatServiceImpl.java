@@ -79,9 +79,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<MessageResponse> searchMessages(String keyword) {
+    public List<MessageResponse> searchMessages(Long projectId, String keyword) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.PROJECT_NOT_FOUND));
         try {
-            List<Message> messages = messageRepository.findByContentContaining(keyword);
+            List<Message> messages = messageRepository.findByProjectAndContentContaining(project, keyword);
             return messages.stream()
                     .map(MessageResponse::new)
                     .toList();
