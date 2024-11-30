@@ -5,6 +5,7 @@ import com.hcmute.projectCT.dto.Collaborator.CollaboratorResponse;
 import com.hcmute.projectCT.dto.RespondData;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Permission;
+import com.hcmute.projectCT.exception.AddCollabFailedException;
 import com.hcmute.projectCT.model.Collaborator;
 import com.hcmute.projectCT.service.CollaboratorService;
 import com.hcmute.projectCT.util.MessageUtil;
@@ -36,16 +37,28 @@ public class CollaboratorController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Add collaborator successfully"),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Duplicated collaborator"),
             })
     @PostMapping("{projectId}/{username}")
     public ResponseEntity<?> addNewCollaborator(@PathVariable Long projectId, @PathVariable String username) {
-        collaboratorService.addNewCollaborator(projectId, username);
-        var respondData = RespondData
-                .builder()
-                .status(HttpStatus.OK.value())
-                .desc(messageUtil.getMessage(MessageKey.COLLAB_ADD_SUCCESS, username))
-                .build();
-        return new ResponseEntity<>(respondData, HttpStatus.OK);
+        try {
+            collaboratorService.addNewCollaborator(projectId, username);
+            var respondData = RespondData
+                    .builder()
+                    .status(HttpStatus.OK.value())
+                    .desc(messageUtil.getMessage(MessageKey.COLLAB_ADD_SUCCESS, username))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        } catch (AddCollabFailedException e) {
+            var respondData = RespondData
+                    .builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage(), username))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
     }
 
 
