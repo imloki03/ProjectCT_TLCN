@@ -111,16 +111,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> searchUsername(String keyword) {
+    public UserResponse searchUserByExactlyUsernameOrEmail(String keyword) {
         if (keyword.trim().isEmpty()) {
-            return new ArrayList<>();
+            return null;
         }
-        List<User> users = userRepository.findByUsernameStartsWithOrNameContains(keyword, keyword);
-        List<UserResponse> userResponses = new ArrayList<>();
-        for (User user : users){
-            userResponses.add(new UserResponse(user));
+        User user = userRepository.findByUsernameOrEmail(keyword, keyword);
+        if (user==null) {
+            return null;
         }
-        return userResponses;
+        return new UserResponse(user);
     }
 
     public void changePassword(ChangePasswordRequest request, String username) {

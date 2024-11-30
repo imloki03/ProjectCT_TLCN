@@ -13,7 +13,7 @@ public interface UserService {
 
     public UserResponse getUserInfo(String username);
 
-    public List<UserResponse> searchUsername(String keyword);
+    public UserResponse searchUserByExactlyUsernameOrEmail(String keyword);
   
     public void changePassword(ChangePasswordRequest request, String username);
 

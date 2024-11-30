@@ -251,11 +251,11 @@ public class UserController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchUser(@RequestParam String q){
-        List<UserResponse> userResponses = userService.searchUsername(q);
+        UserResponse userResponse = userService.searchUserByExactlyUsernameOrEmail(q);
         var respondData = RespondData
                 .builder()
                 .status(HttpStatus.OK.value())
-                .data(userResponses)
+                .data(userResponse)
                 .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
                 .build();
         return new ResponseEntity<>(respondData, HttpStatus.OK);

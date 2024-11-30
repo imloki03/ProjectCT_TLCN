@@ -6,6 +6,7 @@ public class MessageKey {
     public static final String LOGIN_FAILED = "auth.login.failed";
     public static final String LOGIN_SUCCESS = "auth.login.success";
     public static final String COLLAB_ADD_SUCCESS = "collaborator.add.success";
+    public static final String COLLAB_ADD_DUPLICATED = "collaborator.add.duplicated";
     public static final String COLLAB_DELETE_SUCCESS = "collaborator.delete.success";
     public static final String MEDIA_ADDED_SUCCESS = "media.added.success";
     public static final String MEDIA_DELETED_SUCCESS = "media.deleted.success";
