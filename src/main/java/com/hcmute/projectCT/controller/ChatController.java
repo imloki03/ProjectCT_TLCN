@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.Message.MessageRequest;
 import com.hcmute.projectCT.dto.Message.MessageResponse;
+import com.hcmute.projectCT.dto.Message.PinMessageRequest;
 import com.hcmute.projectCT.dto.RespondData;
 import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.model.Message;
@@ -46,19 +47,11 @@ public class ChatController {
                     @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
             })
     @MessageMapping("/send")
-    public RespondData<MessageResponse> sendMessage(MessageRequest request) {
+    public void sendMessage(MessageRequest request) {
         try {
-            var message = chatService.sendMessage(request);
-            return RespondData.<MessageResponse>builder()
-                    .status(HttpStatus.OK.value())
-                    .data(message)
-                    .build();
+            chatService.sendMessage(request);
         } catch (InternalServerException e) {
             messagingTemplate.convertAndSend("/private/" + request.getSender(), messageSource.getMessage(e.getMessage(), new Object[]{}, Locale.ENGLISH));
-            return RespondData.<MessageResponse>builder()
-                    .status(e.getErrorCode())
-                    .data(null)
-                    .build();
         }
     }
 
@@ -70,21 +63,12 @@ public class ChatController {
                     @ApiResponse(responseCode = "200", description = "Message pinned successfully"),
                     @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
             })
-    @PatchMapping("/pin/{id}")
-    public ResponseEntity<?> pinMessage(@PathVariable Long id) {
+    @MessageMapping("/pin")
+    public void pinMessage(PinMessageRequest request) {
         try {
-            chatService.pinMessage(id);
-            var respondData = RespondData.builder()
-                    .status(HttpStatus.OK.value())
-                    .desc(messageUtil.getMessage(MessageKey.MESSAGE_PINNED_SUCCESS))
-                    .build();
-            return new ResponseEntity<>(respondData, HttpStatus.OK);
+            chatService.pinMessage(request);
         } catch (InternalServerException e) {
-            var respondData = RespondData.builder()
-                    .status(e.getErrorCode())
-                    .desc(messageUtil.getMessage(e.getMessage()))
-                    .build();
-            return new ResponseEntity<>(respondData, HttpStatus.OK);
+            messagingTemplate.convertAndSend("/private/" + request.getPinSender(), messageSource.getMessage(e.getMessage(), new Object[]{}, Locale.ENGLISH));
         }
     }
 

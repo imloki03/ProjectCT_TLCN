@@ -3,6 +3,7 @@ package com.hcmute.projectCT.service;
 import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.Message.MessageRequest;
 import com.hcmute.projectCT.dto.Message.MessageResponse;
+import com.hcmute.projectCT.dto.Message.PinMessageRequest;
 import com.hcmute.projectCT.exception.InternalServerException;
 import com.hcmute.projectCT.model.Collaborator;
 import com.hcmute.projectCT.model.Message;
@@ -35,13 +36,12 @@ public class ChatServiceImpl implements ChatService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public MessageResponse sendMessage(MessageRequest request) {
+    public void sendMessage(MessageRequest request) {
         try {
             Message message = toEntity(request);
             messageRepository.save(message);
             MessageResponse messageResponse = new MessageResponse(message);
             messagingTemplate.convertAndSend("/public/project/" + request.getProject(), messageResponse);
-            return messageResponse;
         } catch (Exception e) {
             log.error("Error occurred during sending message", e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.MESSAGE_SENT_ERROR);
@@ -49,18 +49,20 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void pinMessage(Long id) {
-        Message message = messageRepository.findById(id)
+    public void pinMessage(PinMessageRequest request) {
+        Message message = messageRepository.findById(request.getPinMessageId())
                 .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.MESSAGE_NOT_FOUND));
-
         try {
             message.setPinned(!message.isPinned());
             messageRepository.save(message);
+            MessageResponse messageResponse = new MessageResponse(message);
+            messagingTemplate.convertAndSend("/public/project/" + request.getProject(), messageResponse);
         } catch (Exception e) {
             log.error("Error occurred while pinning message", e);
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.MESSAGE_PIN_ERROR);
         }
     }
+
 
     @Override
     public List<MessageResponse> getMessagesByProject(Long projectId) {
