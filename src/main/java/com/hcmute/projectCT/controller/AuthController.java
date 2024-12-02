@@ -3,6 +3,7 @@ package com.hcmute.projectCT.controller;
 import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.AuthResponse;
 import com.hcmute.projectCT.dto.RespondData;
+import com.hcmute.projectCT.dto.Token;
 import com.hcmute.projectCT.dto.User.LoginRequest;
 import com.hcmute.projectCT.dto.User.UserResponse;
 import com.hcmute.projectCT.exception.LoginFailedException;
@@ -58,6 +59,27 @@ public class AuthController {
                     .desc(messageUtil.getMessage(e.getMessage()))
                     .build();
             return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh() {
+        try {
+            Token token = authService.generateToken();
+            var respondData = RespondData
+                    .builder()
+                    .status(HttpStatus.OK.value())
+                    .data(token)
+                    .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            var respondData = RespondData
+                    .builder()
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .desc(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.UNAUTHORIZED);
         }
     }
 }

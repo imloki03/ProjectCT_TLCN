@@ -13,5 +13,5 @@ public class RespondData<T> {
     private int status;
     private T data;
     private String desc;
-    private String token;
+    private Token token;
 }
