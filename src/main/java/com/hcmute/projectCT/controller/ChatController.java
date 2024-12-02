@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -80,14 +81,45 @@ public class ChatController {
                     @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
             })
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<?> getMessagesByProject(@Parameter(description = "The id of the project that messages going to be fetched")
-                                                    @PathVariable Long projectId) {
+    public ResponseEntity<?> getMessagesByProject(
+            @Parameter(description = "The id of the project that messages going to be fetched")
+            @PathVariable Long projectId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         try {
-            List<MessageResponse> messages = chatService.getMessagesByProject(projectId);
+            Page<MessageResponse> messages = chatService.getMessagesByProject(projectId, page, size);
             var respondData = RespondData.builder()
                     .status(HttpStatus.OK.value())
                     .desc(messageUtil.getMessage(MessageKey.MESSAGES_RETRIEVED_SUCCESS))
-                    .data(messages)
+                    .data(messages) // Include pagination metadata if needed
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        } catch (InternalServerException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+    }
+
+    @Operation(
+            summary = "Get messages by project",
+            description = "This API fetches all the messages for a specific project",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Messages retrieved successfully"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error, check for NULL, Data, ...")
+            })
+    @GetMapping("/pin/project/{projectId}")
+    public ResponseEntity<?> getPinnedMessagesByProject(
+            @Parameter(description = "The id of the project that messages going to be fetched")
+            @PathVariable Long projectId) {
+        try {
+            List<MessageResponse> messages = chatService.getPinnedMessagesByProject(projectId);
+            var respondData = RespondData.builder()
+                    .status(HttpStatus.OK.value())
+                    .desc(messageUtil.getMessage(MessageKey.MESSAGES_RETRIEVED_SUCCESS))
+                    .data(messages) // Include pagination metadata if needed
                     .build();
             return new ResponseEntity<>(respondData, HttpStatus.OK);
         } catch (InternalServerException e) {
