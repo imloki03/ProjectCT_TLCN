@@ -16,6 +16,10 @@ import com.hcmute.projectCT.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -65,12 +69,26 @@ public class ChatServiceImpl implements ChatService {
 
 
     @Override
-    public List<MessageResponse> getMessagesByProject(Long projectId) {
+    public Page<MessageResponse> getMessagesByProject(Long projectId, int page, int size) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.PROJECT_NOT_FOUND));
 
         try {
-            List<Message> messages = messageRepository.findByProject(project);
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "sentTime"));
+            Page<Message> messages = messageRepository.findAllByProject(project, pageable);
+            return messages.map(MessageResponse::new); // Convert Page<Message> to Page<MessageResponse>
+        } catch (Exception e) {
+            log.error("Error occurred while fetching messages for project ID: {}", projectId, e);
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR.value(), MessageKey.SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public List<MessageResponse> getPinnedMessagesByProject(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new InternalServerException(HttpStatus.NOT_FOUND.value(), MessageKey.PROJECT_NOT_FOUND));
+        try {
+            List<Message> messages = messageRepository.findByProjectAndIsPinned(project, true);
             return messages.stream()
                     .map(MessageResponse::new)
                     .toList();
@@ -98,6 +116,11 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Message toEntity(MessageRequest request) {
+        //use helper
+        String checked = validateMessageRequest(request);
+        if (checked == null) {
+            log.error("checked");
+        }
         User sender = userRepository.findByUsername(request.getSender());
         Optional<Project> projectOpt = projectRepository.findById(request.getProject());
         if (sender == null) {
@@ -118,5 +141,28 @@ public class ChatServiceImpl implements ChatService {
                 .project(projectOpt.get())
                 .sentTime(LocalDateTime.now())
                 .build();
+    }
+
+    public String validateMessageRequest(MessageRequest request) {
+        User sender = userRepository.findByUsername(request.getSender());
+        Optional<Project> projectOpt = projectRepository.findById(request.getProject());
+        Project project = projectOpt.get();
+        List<Collaborator> collaborators = collaboratorRepository.findByProject_Id(project.getId());
+        boolean isSenderCollaborator = false;
+        for (Collaborator collaborator : collaborators) {
+            if (collaborator.getUser().equals(sender)) {
+                isSenderCollaborator = true;
+                break;
+            }
+        }
+        if (!isSenderCollaborator) {
+            return "Collaborator not found for project ID=" + request.getProject() + " and user=" + request.getSender();
+        }
+
+        if (request.getContent() == null || request.getContent().isBlank()) {
+            return "Message content is invalid: '" + request.getContent() + "'";
+        }
+
+        return "Message request is valid.";
     }
 }
