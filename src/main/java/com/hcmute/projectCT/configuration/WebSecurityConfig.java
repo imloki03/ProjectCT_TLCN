@@ -37,10 +37,14 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(
-                                        "mock/api")
-                                .authenticated()
+                                        "/api/v1/auth/login",
+                                        "/api/v1/user/*",
+                                        "api/v1/otp/send/*",
+                                        "api/v1/otp/verify/*")
+                                .permitAll()
                                 .anyRequest()
-                                .permitAll())
+                                .authenticated()
+                )
 
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session

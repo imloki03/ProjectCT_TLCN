@@ -38,3 +38,7 @@ server:
 
 #Constant
 time_zone: ${TIME_ZONE}
+jwt:
+  secret_key: ${JWT_SECRET_KEY}
+  expired_day: ${JWT_EXPIRED_DAY}
+  expired_hour: ${JWT_EXPIRED_HOUR}
