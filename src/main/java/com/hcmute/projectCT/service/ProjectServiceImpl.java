@@ -3,6 +3,7 @@ package com.hcmute.projectCT.service;
 import com.hcmute.projectCT.dto.Project.ProjectResponse;
 import com.hcmute.projectCT.dto.Project.UpdateProjectRequest;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
+import com.hcmute.projectCT.dto.User.UserResponse;
 import com.hcmute.projectCT.enums.Permission;
 import com.hcmute.projectCT.model.*;
 import com.hcmute.projectCT.repository.CollaboratorRepository;
@@ -141,5 +142,24 @@ public class ProjectServiceImpl implements ProjectService{
             });
         }
         return res;
+    }
+
+    @Override
+    public List<UserResponse> searchUserNotInProject(String query, Long projectId) {
+        List<User> users = userRepository.findByUsernameStartsWithOrNameContains(query, query);
+        List<Collaborator> collaborators = collaboratorRepository.findByProject_Id(projectId);
+
+        List<String> collab_username = new ArrayList<>();
+        for (Collaborator collaborator : collaborators) {
+            collab_username.add(collaborator.getUser().getUsername());
+        }
+
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user : users) {
+            if (!collab_username.contains(user.getUsername())) {
+                userResponses.add(new UserResponse(user));
+            }
+        }
+        return userResponses;
     }
 }

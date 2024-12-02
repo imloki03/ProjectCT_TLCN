@@ -88,34 +88,20 @@ public class PhaseServiceImpl implements PhaseService{
 
     @Override
     public void assignTask(Long taskId, String assigneeUsername) {
-        // Lấy assignee từ user
         User assignee = userRepository.findByUsername(assigneeUsername);
         if (assignee == null) {
             throw new IllegalArgumentException("User with username " + assigneeUsername + " does not exist.");
         }
-
-        // Lấy task từ taskId
         Task task = taskRepository.findById(taskId).orElse(null);
         if (task == null) {
             throw new IllegalArgumentException("Task with ID " + taskId + " does not exist.");
         }
-
-        // Xác định project liên kết với task
         Project project = task.getPhase() != null ? task.getPhase().getProject() : task.getBacklog().getProject();
-
-        // Tìm collaborator từ user và project
         Collaborator collaborator = collaboratorRepository.findByProjectAndUser(project, assignee).orElse(null);
         if (collaborator == null) {
             throw new IllegalArgumentException("No collaborator found for user " + assigneeUsername + " in project " + project.getId());
         }
-
-        // Log để kiểm tra collaborator và assignee
-        log.info("Assigning task: Task ID = {}, Assignee ID = {}", taskId, collaborator.getId());
-
-        // Gán assignee cho task
         task.setAssignee(collaborator);
-
-        // Lưu task sau khi gán assignee
         taskRepository.save(task);
     }
 
@@ -130,9 +116,22 @@ public class PhaseServiceImpl implements PhaseService{
     @Override
     public void moveTaskToBacklog(Long taskId) {
         Task task = taskRepository.findById(taskId).orElse(null);
+        if (task.getAssignee()!=null) {
+            throw new IllegalArgumentException("Can not move assigned task!");
+        }
         Backlog backlog = task.getPhase().getProject().getBacklog();
         task.setPhase(null);
         task.setBacklog(backlog);
+        if (task.getSubTask()!=null) {
+            for (Task subtask : task.getSubTask()) {
+                if (task.getAssignee()!=null) {
+                    throw new IllegalArgumentException("Can not move assigned task!");
+                }
+                subtask.setPhase(null);
+                subtask.setBacklog(backlog);
+                taskRepository.save(subtask);
+            }
+        }
         taskRepository.save(task);
     }
 }
