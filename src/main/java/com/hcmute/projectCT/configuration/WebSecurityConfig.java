@@ -40,9 +40,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(
                                         "/api/v1/auth/login",
+                                        "/api/v1/user",
                                         "/api/v1/user/*",
-                                        "api/v1/otp/send/*",
-                                        "api/v1/otp/verify/*")
+                                        "/api/v1/otp/*")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
