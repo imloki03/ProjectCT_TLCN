@@ -29,4 +29,14 @@ public class WebUtil {
         }
         return null;
     }
+
+    public String getCurrentUsername() {
+        HttpServletRequest request = getCurrentRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return jwtService.getUserName(token);
+        }
+        return null;
+    }
 }

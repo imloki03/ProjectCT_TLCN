@@ -28,6 +28,8 @@ public class WebSecurityConfig {
     @Autowired
     JwtAuthenticationFilter jwtAuthFilter;
     @Autowired
+    PermissionFilter permissionFilter;
+    @Autowired
     AuthenticationProvider authenticationProvider;
 
     @Bean
@@ -50,7 +52,9 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(permissionFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
