@@ -16,6 +16,9 @@ COPY . /app
 # Thiết lập thư mục làm việc
 WORKDIR /app
 
+# Cấp quyền thực thi cho gradlew
+RUN chmod +x gradlew
+
 # Build ứng dụng Spring Boot với Gradle
 RUN ./gradlew bootJar --no-daemon
 
