@@ -5,7 +5,9 @@ import com.hcmute.projectCT.dto.Phase.PhaseResponse;
 import com.hcmute.projectCT.dto.Phase.UpdatePhaseRequest;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Status;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface PhaseService {
@@ -15,7 +17,7 @@ public interface PhaseService {
     List<TaskResponse> getAllTaskInPhase(Long phaseId);
     void updatePhase(Long phaseId, UpdatePhaseRequest updatePhaseRequest);
     void deletePhase(Long phaseId);
-    void assignTask(Long taskId, String assigneeUsername);
+    void assignTask(Long taskId, String assigneeUsername) throws MessagingException, IOException;
     void updateTaskStatus(Long taskId, Status status);
     void moveTaskToBacklog(Long taskId);
 }

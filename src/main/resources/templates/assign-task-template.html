@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your OTP Code</title>
+    <title>Task Assignment Notification</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,7 +21,7 @@
             overflow: hidden;
         }
         .header {
-            background-color: #007bff;
+            background-color: #28a745;
             padding: 20px;
             text-align: center;
         }
@@ -36,13 +36,17 @@
         }
         .content {
             padding: 20px;
-            text-align: center;
         }
-        .otp-code {
-            font-size: 32px;
-            font-weight: bold;
-            color: #007bff;
+        .task-details {
             margin: 20px 0;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .task-details p {
+            margin: 5px 0;
         }
         .footer {
             background-color: #f8f9fa;
@@ -65,15 +69,20 @@
     <!-- Header Section -->
     <div class="header">
         <img src="https://firebasestorage.googleapis.com/v0/b/projectctandroid.appspot.com/o/media%%2F1733232250966_logo_with_name.png?alt=media&token=f72c2b41-b28c-4e40-a002-ef8078774a12" alt="Company Logo">
-        <h1>Email Verification</h1>
+        <h1>New Task Assigned For You</h1>
     </div>
     <!-- Content Section -->
     <div class="content">
-        <p>Hello user,</p>
-        <p>Thank you for using our service. Your One-Time Password (OTP) is:</p>
-        <div class="otp-code">%s</div>
-        <p>Please use this code to complete your authentication.</p>
-        <p>If you did not request this OTP, please ignore this email or contact our support team immediately.</p>
+        <p>Dear %s,</p>
+        <p>You have been assigned a new task. Please find the details below:</p>
+        <div class="task-details">
+            <p>Project: <strong>%s</strong></p>
+            <p>Task Name: <strong>%s</strong> </p>
+            <p>Description: <strong>%s</strong> </p>
+            <p>Start Time: <strong>%s</strong> </p>
+            <p>End Time: <strong>%s</strong> </p>
+        </div>
+        <p>Please ensure to review the task details and start working on it at the scheduled time. If you have any questions, feel free to contact your project manager.</p>
     </div>
     <!-- Footer Section -->
     <div class="footer">

@@ -12,12 +12,14 @@ import com.hcmute.projectCT.util.MessageUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -98,7 +100,7 @@ public class BacklogController {
                             description = "Task updated successfully"),
             })
     @PutMapping("{projectId}/{taskId}")
-    public ResponseEntity<?> updateTask(@PathVariable Long projectId, @PathVariable Long taskId, @RequestBody UpdateTaskRequest updateTaskRequest){
+    public ResponseEntity<?> updateTask(@PathVariable Long projectId, @PathVariable Long taskId, @RequestBody UpdateTaskRequest updateTaskRequest) throws MessagingException, IOException {
         backlogService.updateTask(projectId, taskId, updateTaskRequest);
         var respondData = RespondData
                 .builder()
