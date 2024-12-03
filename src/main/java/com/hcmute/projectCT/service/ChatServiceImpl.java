@@ -121,7 +121,9 @@ public class ChatServiceImpl implements ChatService {
         if (checked == null) {
             log.error("checked");
         }
+        log.error(request.getSender());
         User sender = userRepository.findByUsername(request.getSender());
+        log.error(sender.getId().toString());
         Optional<Project> projectOpt = projectRepository.findById(request.getProject());
         if (sender == null) {
             throw new InternalServerException(HttpStatus.BAD_REQUEST.value(), MessageKey.USER_NOT_FOUND);
