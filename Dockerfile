@@ -3,7 +3,7 @@ FROM ubuntu:latest AS build
 
 # Cập nhật và cài đặt OpenJDK 21 và Gradle
 RUN apt-get update && \
-    apt-get install -y openjdk-21-jdk wget curl
+    apt-get install -y openjdk-21-jdk wget unzip curl
 
 # Cài đặt Gradle 8.10.2
 RUN wget https://services.gradle.org/distributions/gradle-8.10.2-bin.zip -P /tmp && \
