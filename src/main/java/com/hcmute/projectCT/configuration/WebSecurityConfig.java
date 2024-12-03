@@ -42,7 +42,9 @@ public class WebSecurityConfig {
                                         "/api/v1/auth/login",
                                         "/api/v1/user",
                                         "/api/v1/user/*",
-                                        "/api/v1/otp/*")
+                                        "/api/v1/otp/*",
+                                        "/ws",
+                                        "/ws/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -61,7 +63,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://projectct.vercel.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "https://projectct.vercel.app"));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

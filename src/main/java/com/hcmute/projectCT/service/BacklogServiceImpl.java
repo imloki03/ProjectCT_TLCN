@@ -4,16 +4,16 @@ import com.hcmute.projectCT.dto.Task.TaskRequest;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.dto.Task.UpdateTaskRequest;
 import com.hcmute.projectCT.enums.Status;
-import com.hcmute.projectCT.model.Phase;
-import com.hcmute.projectCT.model.Project;
-import com.hcmute.projectCT.model.Task;
-import com.hcmute.projectCT.model.User;
+import com.hcmute.projectCT.model.*;
 import com.hcmute.projectCT.repository.*;
+import com.hcmute.projectCT.util.EmailUtil;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +26,7 @@ public class BacklogServiceImpl implements BacklogService{
     final CollaboratorRepository collaboratorRepository;
     final PhaseRepository phaseRepository;
     final ProjectRepository projectRepository;
+    final EmailUtil emailUtil;
     @Override
     public void createNewTask(Long projectId, TaskRequest taskReq) {
         Project project = projectRepository.findById(projectId).orElse(null);
@@ -63,7 +64,7 @@ public class BacklogServiceImpl implements BacklogService{
     }
 
     @Override
-    public void updateTask(Long projectId, Long taskId, UpdateTaskRequest req) {
+    public void updateTask(Long projectId, Long taskId, UpdateTaskRequest req) throws MessagingException, IOException {
         Task task = taskRepository.findById(taskId).orElse(null);
         task.setName(req.getName());
         task.setType(req.getType());
@@ -80,7 +81,19 @@ public class BacklogServiceImpl implements BacklogService{
             task.setStatus(req.getStatus());
         }
         if (req.getAssigneeUsername()!=null && !req.getAssigneeUsername().trim().isEmpty()){
-            task.setAssignee(collaboratorRepository.findByProject_IdAndUser_Username(projectId, req.getAssigneeUsername()));
+            Collaborator assignee = collaboratorRepository.findByProject_IdAndUser_Username(projectId, req.getAssigneeUsername());
+            task.setAssignee(assignee);
+            String subject = "Assigned Task From "+task.getBacklog().getProject().getName();
+            emailUtil.sendEmail(
+                    assignee.getUser().getEmail(),
+                    subject,
+                    "assign-task-template.html",
+                    assignee.getUser().getName(),
+                    task.getBacklog().getProject().getName(),
+                    task.getName(),
+                    task.getDescription(),
+                    task.getStartTime().toString(),
+                    task.getEndTime().toString());
         }
         taskRepository.save(task);
     }

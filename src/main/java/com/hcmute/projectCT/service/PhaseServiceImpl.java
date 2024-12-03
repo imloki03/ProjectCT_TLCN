@@ -7,11 +7,14 @@ import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.model.*;
 import com.hcmute.projectCT.repository.*;
+import com.hcmute.projectCT.util.EmailUtil;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ public class PhaseServiceImpl implements PhaseService{
     final ProjectRepository projectRepository;
     final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    final EmailUtil emailUtil;
 
     @Override
     public void createNewPhase(Long projectId, PhaseRequest phaseRequest) {
@@ -87,7 +91,7 @@ public class PhaseServiceImpl implements PhaseService{
     }
 
     @Override
-    public void assignTask(Long taskId, String assigneeUsername) {
+    public void assignTask(Long taskId, String assigneeUsername) throws MessagingException, IOException {
         User assignee = userRepository.findByUsername(assigneeUsername);
         if (assignee == null) {
             throw new IllegalArgumentException("User with username " + assigneeUsername + " does not exist.");
@@ -103,6 +107,18 @@ public class PhaseServiceImpl implements PhaseService{
         }
         task.setAssignee(collaborator);
         taskRepository.save(task);
+
+        String subject = "Assigned Task From "+project.getName();
+        emailUtil.sendEmail(
+                assignee.getEmail(),
+                subject,
+                "assign-task-template.html",
+                assignee.getName(),
+                project.getName(),
+                task.getName(),
+                task.getDescription(),
+                task.getStartTime().toString(),
+                task.getEndTime().toString());
     }
 
 
@@ -133,5 +149,6 @@ public class PhaseServiceImpl implements PhaseService{
             }
         }
         taskRepository.save(task);
+
     }
 }

@@ -12,12 +12,14 @@ import com.hcmute.projectCT.util.MessageUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -155,7 +157,7 @@ public class PhaseController {
                             description = "Assign task successfully"),
             })
     @PatchMapping("{projectId}/{phaseId}/{taskId}/assign/{assigneeUsername}")
-    public ResponseEntity<?> assignTask(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable Long taskId, @PathVariable String assigneeUsername) {
+    public ResponseEntity<?> assignTask(@PathVariable Long projectId, @PathVariable Long phaseId, @PathVariable Long taskId, @PathVariable String assigneeUsername) throws MessagingException, IOException {
         phaseService.assignTask(taskId, assigneeUsername);
         var respondData = RespondData
                 .builder()
