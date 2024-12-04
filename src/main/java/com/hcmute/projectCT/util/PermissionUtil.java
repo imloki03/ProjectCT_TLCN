@@ -33,6 +33,15 @@ public class PermissionUtil {
         apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/collab/.*"), HttpMethod.POST), Permission.OWNER);
         apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/collab/.*"), HttpMethod.PATCH), Permission.OWNER);
         apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/collab/.*"), HttpMethod.DELETE), Permission.OWNER);
+
+        apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/version/.*"), HttpMethod.POST), Permission.OWNER);
+        apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/version/.*"), HttpMethod.PUT), Permission.OWNER);
+        apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/version/.*"), HttpMethod.DELETE), Permission.OWNER);
+
+        apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/media/.*"), HttpMethod.POST), Permission.OWNER);
+        apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/media/.*"), HttpMethod.PUT), Permission.OWNER);
+        apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/media/.*"), HttpMethod.PATCH), Permission.OWNER);
+        apiPermissionMap.put(new Endpoint(Pattern.compile("/api/v1/media/.*"), HttpMethod.DELETE), Permission.OWNER);
     }
 
     public Permission getRequiredPermission(String apiPath, HttpMethod method) {
