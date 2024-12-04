@@ -7,12 +7,15 @@ import com.hcmute.projectCT.dto.User.UserResponse;
 import com.hcmute.projectCT.exception.LoginFailedException;
 import com.hcmute.projectCT.model.User;
 import com.hcmute.projectCT.repository.UserRepository;
+import com.hcmute.projectCT.util.PasswordUtil;
 import com.hcmute.projectCT.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -28,7 +31,11 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public AuthResponse login(String username, String password) {
         User user = userRepository.findByUsernameOrEmail(username, username);
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || Objects.equals(password, user.getPassword())) {  //xu ly user cu
+            user.setPassword(PasswordUtil.hashPassword(password));
+            userRepository.save(user);
+        }
+        if (!PasswordUtil.checkPassword(password, user.getPassword())) {
             throw new LoginFailedException(HttpStatus.UNAUTHORIZED.value(), MessageKey.LOGIN_FAILED);
         }
         var accessToken = jwtService.generateToken(user, expiredHour*60*60*1000);
