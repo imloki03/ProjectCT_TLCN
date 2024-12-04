@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService{
             user.setPassword(PasswordUtil.hashPassword(password));
             userRepository.save(user);
         }
-        if (user == null || !PasswordUtil.checkPassword(password, user.getPassword())) {
+        if (!PasswordUtil.checkPassword(password, user.getPassword())) {
             throw new LoginFailedException(HttpStatus.UNAUTHORIZED.value(), MessageKey.LOGIN_FAILED);
         }
         var accessToken = jwtService.generateToken(user, expiredHour*60*60*1000);
