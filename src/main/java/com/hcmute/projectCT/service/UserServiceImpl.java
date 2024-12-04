@@ -12,6 +12,7 @@ import com.hcmute.projectCT.repository.CollaboratorRepository;
 import com.hcmute.projectCT.repository.TagRepository;
 import com.hcmute.projectCT.repository.UserRepository;
 import com.hcmute.projectCT.repository.UserStatusRepository;
+import com.hcmute.projectCT.util.PasswordUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -172,7 +173,7 @@ public class UserServiceImpl implements UserService {
         return User.builder()
                 .username(request.getUsername())
                 .name(request.getName())
-                .password(request.getPassword())
+                .password(PasswordUtil.hashPassword(request.getPassword()))
                 .email(request.getEmail())
                 .gender(request.getGender())
                 .build();
