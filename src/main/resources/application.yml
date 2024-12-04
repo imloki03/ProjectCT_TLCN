@@ -42,3 +42,8 @@ jwt:
   secret_key: ${JWT_SECRET_KEY}
   expired_day: ${JWT_EXPIRED_DAY}
   expired_hour: ${JWT_EXPIRED_HOUR}
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=
