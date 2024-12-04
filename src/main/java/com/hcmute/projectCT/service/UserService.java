@@ -20,4 +20,6 @@ public interface UserService {
     public void activateUser(String username);
 
     public List<AllAssignedTaskResponse> getAllAssignedTaskAtAllProject(String username);
+
+    public void introduceUserAccount(String username);
 }
