@@ -249,6 +249,42 @@ public class UserController {
         }
     }
 
+    @Operation(
+            summary = "Introduce User ",
+            description = "This API introduces user to the system.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Introduce successfully."),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+            }
+    )
+    @PatchMapping("/{username}/introduce")
+    public ResponseEntity<?> introduceUserAccount(
+            @Parameter(description = "The username of the user to introduce.")
+            @PathVariable String username) {
+        try {
+            userService.introduceUserAccount(username);
+            var respondData = RespondData.builder()
+                    .status(HttpStatus.OK.value())
+                    .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (RegistrationException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+        catch (InternalServerException e) {
+            var respondData = RespondData.builder()
+                    .status(e.getErrorCode())
+                    .desc(messageUtil.getMessage(e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
+        }
+    }
+
     @GetMapping("/search")
     public ResponseEntity<?> searchUser(@RequestParam String q){
         UserResponse userResponse = userService.searchUserByExactlyUsernameOrEmail(q);
