@@ -25,6 +25,14 @@ public class Tag {
 
     private String description;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
     @ManyToMany(mappedBy = "tagList")
     private List<User> users;
 }
