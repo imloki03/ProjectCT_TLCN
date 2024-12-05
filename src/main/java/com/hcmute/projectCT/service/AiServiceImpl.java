@@ -38,13 +38,15 @@ public class AiServiceImpl implements AiService{
 
         String conditionTemplate = "Thời gian hiện tại là : %s\n" +
                 "Hãy chọn ra một user danh sách dưới đây để đảm nhiệm cho một task dựa vào thông tin tôi cung cấp phía dưới. User được lựa chọn phải phù hợp nhất với tất cả các tiêu chí lựa chọn như sau:\n" +
+                "-Ưu tiên các user hiện không làm task nào.\n" +
                 "-Năng lực của user phù hợp với nội dung của task.\n" +
                 "-Tránh phân công cho người có nhiều task quá hạn.\n" +
                 "-Khối lượng công việc giữa các user không quá chênh lệch.\n" +
-                "-Tại cùng một thời điểm user không cùng thực hiện quá nhiều task.\n";
+                "-Tại cùng một thời điểm user không cùng thực hiện quá nhiều task.\n" +
+                "-Nếu có nhiều người có mức độ phù hợp với công việc là như nhau thì chọn ngẫu nhiên một người, và không liệt kê người đó trong reason.\n";
         String condition = String.format(conditionTemplate, LocalDateTime.now().toString());
 
-        String respondStruct = "Hãy trả về kết quả bằng tiếng Anh ở dạng json với cấu trúc bao gồm username là username của user mà bạn chọn, reason là tóm tắt lý do mà bạn lựa chọn user đó, kết quả trả về cho tôi bắt đầu bằng dấu { và kết thúc bằng dấu }:\n" ;
+        String respondStruct = "Hãy trả về kết quả bằng tiếng Anh ở dạng json với cấu trúc bao gồm username là username của user mà bạn chọn, reason là tóm tắt lý do mà bạn lựa chọn user đó, sử dụng tên để chỉ user thay vì username, kết quả trả về cho tôi bắt đầu bằng dấu { và kết thúc bằng dấu }:\n" ;
 
         String taskInfoTemplate = "Đây là thông tin cần thiết cho bạn:\n" +
                 "-Thông tin về task cần được phân công:\n" +
@@ -65,6 +67,7 @@ public class AiServiceImpl implements AiService{
         for (CollaboratorResponse collab: collaboratorList) {
             User user = userRepository.findByUsername(collab.getUsername());
             StringBuilder userInfo = new StringBuilder("-Username: "+collab.getUsername()+"\n" +
+                    "+Tên: "+ collab.getName() +"\n"+
                     "+Các từ khóa mô tả thêm về năng lực của user (nếu đó là danh sách rỗng thì giả sử user đó có năng lực tương đồng với các user còn lại): "+user.getTagList()+"\n"+
                     "+Danh sách task chưa hoàn thành: ");
             List<TaskResponse> taskList = collaboratorService.getAllCollaboratorAssignedTask(collab.getId());
@@ -79,9 +82,9 @@ public class AiServiceImpl implements AiService{
             }
             userList.append(userInfo+"\n");
         }
-        log.error(condition + respondStruct + taskInfo+ userList);
+        //log.error(condition + respondStruct + taskInfo+ userList);
         String response = geminiService.sendMessage(condition + respondStruct + taskInfo+ userList);
-        log.error(response);
+        //log.error(response);
         int start = response.indexOf('{');
         int end = response.lastIndexOf('}');
         ObjectMapper objectMapper = new ObjectMapper();

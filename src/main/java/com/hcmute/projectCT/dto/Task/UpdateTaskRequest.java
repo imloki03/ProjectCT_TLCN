@@ -24,6 +24,7 @@ public class UpdateTaskRequest {
     LocalDateTime endTime;
     private Priority priority;
     String assigneeUsername;
+    Long phaseId;
     Status status;
 
     public UpdateTaskRequest(Task task){
@@ -34,6 +35,9 @@ public class UpdateTaskRequest {
         this.endTime = task.getEndTime();
         this.priority = task.getPriority();
         this.assigneeUsername = task.getAssignee().getUser().getUsername();
+        if (task.getPhase()!=null) {
+            this.phaseId = task.getPhase().getId();
+        }
         this.status = task.getStatus();
     }
 }
