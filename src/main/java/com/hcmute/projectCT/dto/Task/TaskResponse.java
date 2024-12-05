@@ -29,6 +29,7 @@ public class TaskResponse {
     String assigneeUsername;
     Status status;
     Long backlogId;
+    Long phaseId;
 
 
     public TaskResponse(Task task){
@@ -49,6 +50,9 @@ public class TaskResponse {
         this.status = task.getStatus();
         if (task.getBacklog()!=null){
             this.backlogId = task.getBacklog().getId();
+        }
+        if (task.getPhase()!=null){
+            this.phaseId = task.getPhase().getId();
         }
     }
 }
