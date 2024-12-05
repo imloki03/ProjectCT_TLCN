@@ -42,10 +42,11 @@ public class WebSecurityConfig {
                                         "/api/v1/auth/login",
                                         "/api/v1/user",
                                         "/api/v1/user/*",
-                                        "/api/v1/otp/*",
+                                        "/api/v1/otp/**",
+                                        "/api/v1/gemini",
+                                        "/api/v1/ai/**",
                                         "/ws",
-                                        "/ws/**",
-                                        "api/v1/gemini")
+                                        "/ws/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

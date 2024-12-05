@@ -4,6 +4,7 @@ import com.hcmute.projectCT.constant.MessageKey;
 import com.hcmute.projectCT.dto.Collaborator.CollaboratorResponse;
 import com.hcmute.projectCT.dto.Task.TaskResponse;
 import com.hcmute.projectCT.enums.Permission;
+import com.hcmute.projectCT.enums.Status;
 import com.hcmute.projectCT.exception.AddCollabFailedException;
 import com.hcmute.projectCT.model.Collaborator;
 import com.hcmute.projectCT.model.Project;
@@ -71,7 +72,8 @@ public class CollaboratorServiceImpl implements CollaboratorService{
     @Override
     public List<TaskResponse> getAllCollaboratorAssignedTask(Long collabId) {
         Collaborator collaborator = collaboratorRepository.findById(collabId).orElse(null);
-        return Objects.requireNonNull(collaborator).getTaskList().stream()
+        return collaborator.getTaskList().stream()
+                .filter(task -> task.getStatus() != Status.DONE)
                 .map(TaskResponse::new)
                 .toList();
     }
