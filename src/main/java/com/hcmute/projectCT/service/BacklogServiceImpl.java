@@ -83,13 +83,14 @@ public class BacklogServiceImpl implements BacklogService{
         if (req.getAssigneeUsername()!=null && !req.getAssigneeUsername().trim().isEmpty()){
             Collaborator assignee = collaboratorRepository.findByProject_IdAndUser_Username(projectId, req.getAssigneeUsername());
             task.setAssignee(assignee);
-            String subject = "Assigned Task From "+task.getBacklog().getProject().getName();
+            Project project = task.getPhase() != null ? task.getPhase().getProject() : task.getBacklog().getProject();
+            String subject = "Assigned Task From "+project.getName();
             emailUtil.sendEmail(
                     assignee.getUser().getEmail(),
                     subject,
                     "assign-task-template.html",
                     assignee.getUser().getName(),
-                    task.getBacklog().getProject().getName(),
+                    project.getName(),
                     task.getName(),
                     task.getDescription(),
                     task.getStartTime().toString(),
