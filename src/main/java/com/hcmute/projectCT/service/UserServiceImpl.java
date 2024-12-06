@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            user.setPassword(request.getPassword());
+            user.setPassword(PasswordUtil.hashPassword(request.getPassword()));
             userRepository.save(user);
         }
         catch (Exception e) {
