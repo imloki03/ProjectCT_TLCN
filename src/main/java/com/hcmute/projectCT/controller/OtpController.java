@@ -73,7 +73,7 @@ public class OtpController {
                     .status(HttpStatus.FORBIDDEN.value())
                     .desc(messageUtil.getMessage(MessageKey.REQUEST_SUCCESS))
                     .build();
-            return new ResponseEntity<>(respondData, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(respondData, HttpStatus.OK);
         }
     }
 }
