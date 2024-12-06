@@ -31,11 +31,11 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public AuthResponse login(String username, String password) {
         User user = userRepository.findByUsernameOrEmail(username, username);
-        if (user == null || Objects.equals(password, user.getPassword())) {  //xu ly user cu
-            user.setPassword(PasswordUtil.hashPassword(password));
-            userRepository.save(user);
-        }
-        if (!PasswordUtil.checkPassword(password, user.getPassword())) {
+//        if (user == null || Objects.equals(password, user.getPassword())) {  //xu ly user cu
+//            user.setPassword(PasswordUtil.hashPassword(password));
+//            userRepository.save(user);
+//        }
+        if (user == null || !PasswordUtil.checkPassword(password, user.getPassword())) {
             throw new LoginFailedException(HttpStatus.UNAUTHORIZED.value(), MessageKey.LOGIN_FAILED);
         }
         var accessToken = jwtService.generateToken(user, expiredHour*60*60*1000);
