@@ -8,10 +8,7 @@ import com.hcmute.projectCT.model.Collaborator;
 import com.hcmute.projectCT.model.Project;
 import com.hcmute.projectCT.model.User;
 import com.hcmute.projectCT.model.UserStatus;
-import com.hcmute.projectCT.repository.CollaboratorRepository;
-import com.hcmute.projectCT.repository.TagRepository;
-import com.hcmute.projectCT.repository.UserRepository;
-import com.hcmute.projectCT.repository.UserStatusRepository;
+import com.hcmute.projectCT.repository.*;
 import com.hcmute.projectCT.util.PasswordUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final UserStatusRepository userStatusRepository;
     private final TagRepository tagRepository;
     private final CollaboratorRepository collaboratorRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
     public void register(RegisterRequest request) {
@@ -159,7 +157,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<AllAssignedTaskResponse> getAllAssignedTaskAtAllProject(String username) {
         User user = userRepository.findByUsername(username);
-        List<Project> projects = user.getProjectList();
+        List<Project> projects = projectRepository.findByOwner_UsernameOrCollaboratorList_User_Username(username, username);
         List<AllAssignedTaskResponse> tasks = new ArrayList<>();
         for (Project project : projects) {
             Collaborator collab = collaboratorRepository.findByProjectAndUser(project, user).orElse(null);
